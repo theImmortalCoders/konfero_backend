@@ -1,0 +1,28 @@
+springdoc:
+  swagger-ui:
+    path: /api/docs.html
+    tags-sorter: alpha
+    operations-sorter: method
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5437/data
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-id: 613981732432-ru776ugru9amm581881k2pef05ugjv5q.apps.googleusercontent.com
+            client-secret: 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
+  jpa:
+    hibernate:
+      ddl-auto: update
+konfero:
+  security:
+    allowed-origins:
+      - http://localhost:8080/
+      - http://localhost:3000/
+    redirect-uri: http://localhost:8080/api/docs.html

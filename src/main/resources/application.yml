@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: konfero_backend
+  jpa:
+    defer-datasource-initialization: true
+  servlet:
+    multipart.max-file-size: 10MB
+    multipart.max-request-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+server:
+  error:
+    include-message: always
+konfero:
+  security:
+    login-uri: /api/oauth2/authorize
+    logout-uri: /api/oauth2/logout
