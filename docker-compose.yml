@@ -1,9 +1,16 @@
+version: '3.8'
 services:
   postgres:
-    image: 'postgres:latest'
+    image: postgres:latest
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: data
     ports:
-      - '5432'
+      - "5437:5432"
+    volumes:
+      - type: volume
+        source: pgvolume
+        target: /var/lib/postgresql/data
+volumes:
+  pgvolume:
