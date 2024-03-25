@@ -3,13 +3,12 @@ package pl.immortal.konfero_backend.config;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import pl.immortal.konfero_backend.infrastructure.auth.OidcAuthService;
@@ -54,13 +54,14 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(request -> request
                         .anyRequest()
                         .permitAll())
                 .oauth2Login(login -> login
-                        .userInfoEndpoint(uie->uie.oidcUserService(oidcAuthService))
-                        .authorizationEndpoint(endpoint->endpoint.baseUri(applicationProps.getLoginUri()))
+                        .userInfoEndpoint(uie -> uie.oidcUserService(oidcAuthService))
+                        .authorizationEndpoint(endpoint -> endpoint.baseUri(applicationProps.getLoginUri()))
                         .successHandler((request, response, authentication) -> {
                             RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
                             String redirectUrl = Arrays.stream(request.getCookies())
@@ -77,9 +78,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl(applicationProps.getRedirectUri())
                         .invalidateHttpSession(false)
                         .deleteCookies("JSESSIONID")
-                )
-                .exceptionHandling(exception->exception.authenticationEntryPoint((request, response, authException) ->
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
+                );
         return http.build();
     }
 }

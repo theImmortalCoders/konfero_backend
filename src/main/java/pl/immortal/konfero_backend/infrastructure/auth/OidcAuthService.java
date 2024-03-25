@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.model.entity.User;
-import pl.immortal.konfero_backend.model.repository.UserRepository;
+import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
 
 import java.util.Map;
 
