@@ -3,6 +3,8 @@ package pl.immortal.konfero_backend.infrastructure.auth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,8 +57,12 @@ public class UserController {
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "User not found")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void updateRole(@RequestBody Role newRole, @PathVariable String userId) {
-        userService.updateRole(newRole, userId);
+    public void updateRole(
+            @RequestBody Role newRole,
+            @PathVariable Long userId,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        userService.updateRole(newRole, userId, request, response);
     }
 
     @PatchMapping("/{userId}/ban")
@@ -66,7 +72,7 @@ public class UserController {
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "User not found")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void banUser(@PathVariable String userId) {
+    public void banUser(@PathVariable Long userId) {
         userService.banUser(userId);
     }
 }

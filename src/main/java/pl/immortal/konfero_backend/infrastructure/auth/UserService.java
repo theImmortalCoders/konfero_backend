@@ -1,32 +1,77 @@
 package pl.immortal.konfero_backend.infrastructure.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.OrganizerSingleBecomeRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
+import pl.immortal.konfero_backend.model.entity.User;
 
 @Service
 @AllArgsConstructor
 public class UserService {
-    private final OidcAuthService oidcAuthService;
+    private final UserUtil userUtil;
     private final UserMapper userMapper;
 
     UserSingleResponse getCurrentUserResponse() {
-        return userMapper.map(oidcAuthService.getCurrentUser());
+        return userMapper.map(userUtil.getCurrentUser());
     }
 
     void updateProfile(ProfileUpdateSingleRequest request) {
+        User user = userUtil.getCurrentUser();
+
+        user.setPhone(request.getPhone());
+        user.setCity(request.getCity());
+
+        userUtil.saveUser(user);
     }
 
     void becomeOrganizer(OrganizerSingleBecomeRequest request) {
+        User user = userUtil.getCurrentUser();
+
+        user.setPhone(request.getPhone());
+        user.setCity(request.getCity());
+        user.setCompanyName(request.getCompanyName());
+        user.setAddress(request.getAddress());
+        user.setRole(Role.ORGANIZER);
+
+        userUtil.saveUser(user);
     }
 
-    void updateRole(Role newRole, String userId) {
+    void updateRole(Role newRole, Long userId, HttpServletRequest request, HttpServletResponse response) {
+        User user = userUtil.getUserById(userId);
+
+        user.setRole(newRole);
+
+        userUtil.saveUser(user);
+        logoutUser(request, response);
     }
 
-    void banUser(String userId) {
+    void banUser(Long userId) {
+        User user = userUtil.getUserById(userId);
+
+        if (user.getId().equals(userUtil.getCurrentUser().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot ban yourself");
+        }
+
+        user.setActive(false);
+
+        userUtil.saveUser(user);
+    }
+
+    //
+
+    private static void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }
