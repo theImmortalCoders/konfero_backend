@@ -3,7 +3,6 @@ package pl.immortal.konfero_backend.infrastructure.auth;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,7 +12,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.model.entity.User;
-import pl.immortal.konfero_backend.model.repository.UserRepository;
+import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
 
 import java.util.Map;
 
@@ -31,6 +30,11 @@ public class OidcAuthService extends OidcUserService {
                 .findByUsername((String) attributes.get("email"))
                 .orElseGet(() -> createUser(attributes));
         userRepository.save(user);
+
+        if (!user.isActive()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Konto użytkownika jest nieaktywne.");
+        }
+
         return new DefaultOidcUser(user.getAuthorities(), oidcUser.getIdToken(),
                 new OidcUserInfo(attributes), "email");
     }
@@ -50,12 +54,6 @@ public class OidcAuthService extends OidcUserService {
                     newUser.setGoogleId((String) attributes.get("sub"));
                     return userRepository.save(newUser);
                 });
-    }
-
-    public User getCurrentUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return Option.ofOptional(userRepository.findByEmail(username))
-                .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
 }

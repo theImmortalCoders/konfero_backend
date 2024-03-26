@@ -1,18 +1,16 @@
 package pl.immortal.konfero_backend.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import jakarta.persistence.*;
 import pl.immortal.konfero_backend.model.Role;
 
 import java.util.Collection;
@@ -24,6 +22,7 @@ import java.util.Map;
 @Setter
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails, OAuth2User {
     @Id
@@ -38,11 +37,11 @@ public class User implements UserDetails, OAuth2User {
     @Column(unique = true)
     private String email;
     private String photo;
-    private boolean isActive = true;
-
-    public User() {
-
-    }
+    private boolean active = true;
+    private String companyName;
+    private String address;
+    private String city;
+    private String phone;
 
     @Override
     public String getName() {
@@ -59,6 +58,7 @@ public class User implements UserDetails, OAuth2User {
         attributes.put("login", username);
         attributes.put("avatar_url", photo);
         attributes.put("picture", photo);
+        attributes.put("active", active);
         return attributes;
     }
 
@@ -74,22 +74,22 @@ public class User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.isActive;
+        return this.active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.isActive;
+        return this.active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.isActive;
+        return this.active;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.isActive;
+        return this.active;
     }
 
 
