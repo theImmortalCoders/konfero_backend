@@ -21,6 +21,7 @@ import pl.immortal.konfero_backend.infrastructure.auth.dto.OrganizerSingleBecome
 import pl.immortal.konfero_backend.infrastructure.auth.dto.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapperImpl;
+import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
@@ -51,6 +52,7 @@ public class UserServiceTest {
     private SecurityContext securityContext;
     @Spy
     private UserMapper userMapper = new UserMapperImpl();
+    private final MailTemplateService mailTemplateService = mock(MailTemplateService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
     @Spy
     private UserUtil userUtil = new UserUtil(userRepository);
