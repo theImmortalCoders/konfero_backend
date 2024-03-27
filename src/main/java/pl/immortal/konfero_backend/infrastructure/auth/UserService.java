@@ -53,7 +53,7 @@ public class UserService {
 
         userUtil.saveUser(user);
 
-        if(userId.equals(userUtil.getCurrentUser().getId())){
+        if (userId.equals(userUtil.getCurrentUser().getId())) {
             logoutUser(request, response);
         }
     }
