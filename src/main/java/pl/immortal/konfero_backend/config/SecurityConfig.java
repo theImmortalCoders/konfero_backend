@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .allowedOrigins(
                                 applicationProps.getAllowedOrigins().toArray(new String[0]))
                         .allowedHeaders("*")
+                        .allowCredentials(true)
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
             }
         };
