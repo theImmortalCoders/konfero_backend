@@ -8,10 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.OrganizerSingleBecomeRequest;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.UserSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
 
@@ -20,6 +19,7 @@ import pl.immortal.konfero_backend.model.entity.User;
 public class UserService {
     private final UserUtil userUtil;
     private final UserMapper userMapper;
+    private final OrganizerRequestService organizerRequestService;
 
     UserSingleResponse getCurrentUserResponse() {
         return userMapper.map(userUtil.getCurrentUser());
@@ -30,18 +30,6 @@ public class UserService {
 
         user.setPhone(request.getPhone());
         user.setCity(request.getCity());
-
-        userUtil.saveUser(user);
-    }
-
-    void becomeOrganizer(OrganizerSingleBecomeRequest request) {
-        User user = userUtil.getCurrentUser();
-
-        user.setPhone(request.getPhone());
-        user.setCity(request.getCity());
-        user.setCompanyName(request.getCompanyName());
-        user.setAddress(request.getAddress());
-        user.setRole(Role.ORGANIZER);
 
         userUtil.saveUser(user);
     }

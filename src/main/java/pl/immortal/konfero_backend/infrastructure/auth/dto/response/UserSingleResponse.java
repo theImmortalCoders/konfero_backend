@@ -1,4 +1,4 @@
-package pl.immortal.konfero_backend.infrastructure.auth.dto;
+package pl.immortal.konfero_backend.infrastructure.auth.dto.response;
 
 import lombok.Data;
 import pl.immortal.konfero_backend.model.Role;

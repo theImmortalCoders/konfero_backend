@@ -17,10 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.server.ResponseStatusException;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.OrganizerSingleBecomeRequest;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapperImpl;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
@@ -87,23 +86,6 @@ public class UserServiceTest {
 
         assertEquals(updateRequest.getCity(), user.getCity());
         assertEquals(updateRequest.getPhone(), user.getPhone());
-    }
-
-    @Test
-    public void shouldBecomeOrganizer() {
-        var organizerRequest = new OrganizerSingleBecomeRequest();
-        organizerRequest.setCity("city");
-        organizerRequest.setPhone("phone");
-        organizerRequest.setCompanyName("companyName");
-        organizerRequest.setAddress("address");
-
-        userService.becomeOrganizer(organizerRequest);
-
-        assertEquals(organizerRequest.getCity(), user.getCity());
-        assertEquals(organizerRequest.getPhone(), user.getPhone());
-        assertEquals(organizerRequest.getCompanyName(), user.getCompanyName());
-        assertEquals(organizerRequest.getAddress(), user.getAddress());
-        assertEquals(Role.ORGANIZER, user.getRole());
     }
 
     @Test
