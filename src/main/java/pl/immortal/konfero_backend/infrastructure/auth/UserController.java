@@ -9,10 +9,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.OrganizerSingleBecomeRequest;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.ProfileUpdateSingleRequest;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.UserSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.request.OrganizerSingleBecomeRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.OrganizerRequestSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -20,6 +23,7 @@ import pl.immortal.konfero_backend.model.Role;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final OrganizerRequestService organizerRequestService;
 
     @GetMapping("/me")
     @Operation(summary = "Get info about current user (Auth)")
@@ -41,13 +45,13 @@ public class UserController {
     }
 
     @PostMapping("/become-organizer")
-    @Operation(summary = "Become organizer (update data) (Auth)")
+    @Operation(summary = "Become organizer (Auth)")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "404", description = "Bad request")
     @PreAuthorize("isAuthenticated()")
     public void becomeOrganizer(@RequestBody OrganizerSingleBecomeRequest request) {
-        userService.becomeOrganizer(request);
+        organizerRequestService.becomeOrganizer(request);
     }
 
     @PatchMapping("/{userId}/role")
@@ -67,12 +71,33 @@ public class UserController {
 
     @PatchMapping("/{userId}/ban")
     @Operation(summary = "Ban user (Admin)")
-    @ApiResponse(responseCode = "200", description = "Successfully authenticated")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "User not found")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void banUser(@PathVariable Long userId) {
         userService.banUser(userId);
+    }
+
+    @PutMapping("/{requestId}")
+    @Operation(summary = "Review organizer request (Admin)")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "User not found")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void reviewOrganizer(@PathVariable Long requestId, @RequestParam boolean approve) {
+        organizerRequestService.reviewOrganizer(requestId, approve);
+    }
+
+    @GetMapping("/organizer-requests")
+    @Operation(summary = "Get all pending become-organizer requests (Admin)")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<OrganizerRequestSingleResponse>> getAllPendingRequests() {
+        return ResponseEntity.ok(organizerRequestService.getAllPendingRequests());
     }
 }
