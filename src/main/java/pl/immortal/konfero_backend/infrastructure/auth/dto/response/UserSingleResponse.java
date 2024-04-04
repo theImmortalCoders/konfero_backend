@@ -1,7 +1,10 @@
 package pl.immortal.konfero_backend.infrastructure.auth.dto.response;
 
 import lombok.Data;
+import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceShortResponse;
 import pl.immortal.konfero_backend.model.Role;
+
+import java.util.List;
 
 @Data
 public class UserSingleResponse {
@@ -16,4 +19,6 @@ public class UserSingleResponse {
     private String address;
     private String city;
     private String phone;
+    private List<ConferenceShortResponse> conferencesOrganized;
+    private List<ConferenceShortResponse> conferencesParticipated;
 }
