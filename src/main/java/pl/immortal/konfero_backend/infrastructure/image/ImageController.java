@@ -49,7 +49,7 @@ public class ImageController {
         return ResponseEntity.ok(imageService.uploadMultipleImages(uploadedFiles, thumbnail));
     }
 
-    @GetMapping("{imageId}")
+    @GetMapping("/{imageId}")
     @Operation(summary = "Download image from server by id", description = "Returns image as byte array")
     @ApiResponse(responseCode = "200", description = "Image downloaded successfully")
     @ApiResponse(responseCode = "404", description = "Image not found")

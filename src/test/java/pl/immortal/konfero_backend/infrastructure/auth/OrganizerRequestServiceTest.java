@@ -137,6 +137,8 @@ public class OrganizerRequestServiceTest {
         userResponse.setId(1L);
         userResponse.setRole(Role.USER);
         userResponse.setActive(true);
+        userResponse.setConferencesOrganized(new ArrayList<>());
+        userResponse.setConferencesParticipated(new ArrayList<>());
 
         OrganizerRequestSingleResponse response = new OrganizerRequestSingleResponse();
         response.setId(1L);

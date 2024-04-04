@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import pl.immortal.konfero_backend.model.Role;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
@@ -42,6 +39,10 @@ public class User implements UserDetails, OAuth2User {
     private String address;
     private String city;
     private String phone;
+    @ManyToMany
+    private List<Conference> conferencesOrganized = new ArrayList<>();
+    @ManyToMany
+    private List<Conference> conferencesParticipated = new ArrayList<>();
 
     @Override
     public String getName() {
