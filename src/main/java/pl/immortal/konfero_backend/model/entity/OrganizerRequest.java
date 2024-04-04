@@ -12,6 +12,7 @@ public class OrganizerRequest {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "author_id")
     private User user;
+    @Enumerated(EnumType.STRING)
     private OrganizerRequestStatus status = OrganizerRequestStatus.PENDING;
 
     public enum OrganizerRequestStatus {
