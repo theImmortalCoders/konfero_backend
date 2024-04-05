@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.request.ConferenceSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceShortResponse;
+import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleGuestResponse;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleResponse;
 import pl.immortal.konfero_backend.model.entity.Conference;
 
@@ -12,6 +13,9 @@ import pl.immortal.konfero_backend.model.entity.Conference;
 public interface ConferenceMapper {
     @Mapping(target = "finished", ignore = true)
     ConferenceSingleResponse map(Conference conference);
+
+    @Mapping(target = "finished", ignore = true)
+    ConferenceSingleGuestResponse guestMap(Conference conference);
 
     @Mapping(target = "finished", ignore = true)
     ConferenceShortResponse shortMap(Conference conference);

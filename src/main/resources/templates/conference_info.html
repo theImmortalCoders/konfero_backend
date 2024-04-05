@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        * {
+            color: black;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <p>Szanowny Użytkowniku,</p>
+    <p>Mamy nowe informacje na temat konferencji, na którą się zapisałeś: <strong th:text="${conferenceName}"></strong>
+    </p>
+    <p>Data i czas konferencji: <strong th:text="${conferenceDateTime}"></strong></p>
+    <p>Wiadomość: <strong th:text="${messageText}"></strong></p>
+    <p>Pozdrawiamy,</p>
+    <strong>zespół Konfero</strong>
+    <p class="footer">Ta wiadomość została wygenerowana automatycznie. Prosimy na nią nie odpowiadać.</p>
+</div>
+</body>
+</html>
