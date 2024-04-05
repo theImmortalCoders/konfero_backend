@@ -23,4 +23,6 @@ public class ConferenceSingleResponse {
     private Location location;
     private List<UserShortResponse> participants;
     private List<LectureShortResponse> lectures;
+    private boolean finished;
+    private boolean canceled;
 }
