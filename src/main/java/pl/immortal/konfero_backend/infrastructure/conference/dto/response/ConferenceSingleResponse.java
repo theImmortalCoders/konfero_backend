@@ -24,4 +24,5 @@ public class ConferenceSingleResponse {
     private List<UserShortResponse> participants;
     private List<LectureShortResponse> lectures;
     private boolean finished;
+    private boolean canceled;
 }

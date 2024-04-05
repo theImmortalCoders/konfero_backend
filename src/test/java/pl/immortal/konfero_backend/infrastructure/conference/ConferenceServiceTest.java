@@ -21,9 +21,12 @@ import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -144,6 +147,40 @@ public class ConferenceServiceTest {
         assertThrows(
                 ResponseStatusException.class,
                 () -> conferenceService.updateInfo(1L, request)
+        );
+    }
+
+    @Test
+    public void shouldCancelConference() {
+        conferenceService.cancel(1L);
+
+        assertTrue(conference.isCanceled());
+    }
+
+    @Test
+    public void shouldThrowBadRequestWhenConferenceCancel() {
+        conference.setCanceled(true);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> conferenceService.cancel(1L)
+        );
+    }
+
+    @Test
+    public void shouldDeleteConference() {
+        conferenceService.delete(1L);
+
+        verify(conferenceRepository, times(1)).delete(any(Conference.class));
+    }
+
+    @Test
+    public void shouldThrowBadRequestWhenDeleteConference() {
+        conference.setParticipants(new ArrayList<>(List.of(user)));
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> conferenceService.delete(1L)
         );
     }
 }

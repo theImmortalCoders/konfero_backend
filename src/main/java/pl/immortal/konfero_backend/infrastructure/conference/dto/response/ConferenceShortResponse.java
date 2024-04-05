@@ -17,4 +17,5 @@ public class ConferenceShortResponse {
     private Image image;
     private Location location;
     private boolean finished;
+    private boolean canceled;
 }
