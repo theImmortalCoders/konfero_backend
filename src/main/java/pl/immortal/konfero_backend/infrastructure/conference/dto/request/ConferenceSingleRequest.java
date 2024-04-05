@@ -13,7 +13,10 @@ public class ConferenceSingleRequest {
     private LocalDateTime endDateTime;
     private String name;
     private String description;
-    private Long imageId;
+    private Long logoId;
     private List<Conference.Tag> tags;
     private Location location;
+    private int participantsLimit;
+    private Conference.Format format;
+    private List<Long> photosIds;
 }

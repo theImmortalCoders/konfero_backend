@@ -26,7 +26,7 @@ public class Conference {
     private String description;
     @ManyToOne
     @JoinColumn(name = "image_id")
-    private Image image;
+    private Image logo;
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
     private List<Tag> tags = new ArrayList<>();
@@ -40,8 +40,16 @@ public class Conference {
     @ToString.Exclude
     private List<Lecture> lectures = new ArrayList<>();
     private boolean canceled;
+    private int participantsLimit;
+    @Enumerated(EnumType.STRING)
+    private Format format = Format.STATIONARY;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    private List<Image> photos;
 
     public enum Tag {
         IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
+    }
+    public enum Format {
+        STATIONARY, ONLINE
     }
 }

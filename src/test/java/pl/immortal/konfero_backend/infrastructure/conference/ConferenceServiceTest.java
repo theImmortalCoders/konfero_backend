@@ -56,7 +56,7 @@ public class ConferenceServiceTest {
         conference = new Conference();
         conference.setId(1L);
         conference.setOrganizer(user);
-        conference.setImage(image);
+        conference.setLogo(image);
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1));
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
 
@@ -71,7 +71,7 @@ public class ConferenceServiceTest {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
         request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
-        request.setImageId(1L);
+        request.setLogoId(1L);
 
         conferenceService.add(request);
 
@@ -83,7 +83,7 @@ public class ConferenceServiceTest {
         var request = new ConferenceSingleRequest();
         request.setEndDateTime(LocalDateTime.now().plusMonths(1));
         request.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
-        request.setImageId(1L);
+        request.setLogoId(1L);
 
         assertThrows(
                 ResponseStatusException.class,
@@ -104,7 +104,7 @@ public class ConferenceServiceTest {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
         request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
-        request.setImageId(1L);
+        request.setLogoId(1L);
 
         conferenceService.updateInfo(1L, request);
 
@@ -116,7 +116,7 @@ public class ConferenceServiceTest {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
         request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
-        request.setImageId(1L);
+        request.setLogoId(1L);
         User user2 = new User();
         user2.setId(2L);
         when(userUtil.getUserById(2L)).thenReturn(user2);
@@ -133,7 +133,7 @@ public class ConferenceServiceTest {
         var request = new ConferenceSingleRequest();
         request.setEndDateTime(LocalDateTime.now().plusMonths(1));
         request.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
-        request.setImageId(1L);
+        request.setLogoId(1L);
         conference.setOrganizer(user);
 
         assertThrows(

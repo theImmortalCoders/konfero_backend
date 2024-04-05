@@ -35,7 +35,8 @@ public class ConferenceService {
                 .map(conferenceMapper::map)
                 .peek(c -> {
                     c.setOrganizer(userUtil.getCurrentUser());
-                    c.setImage(imageUtil.getImageById(request.getImageId()));
+                    c.setLogo(imageUtil.getImageById(request.getLogoId()));
+                    c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
                 })
                 .peek(conferenceUtil::save);
     }
@@ -51,7 +52,8 @@ public class ConferenceService {
                 .peek(c -> {
                     conferenceMapper.update(c, request);
                     c.setOrganizer(userUtil.getCurrentUser());
-                    c.setImage(imageUtil.getImageById(request.getImageId()));
+                    c.setLogo(imageUtil.getImageById(request.getLogoId()));
+                    c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
                 })
                 .peek(conferenceUtil::save);
     }

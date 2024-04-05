@@ -22,15 +22,17 @@ public interface ConferenceMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "organizer", ignore = true)
-    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "logo", ignore = true)
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "lectures", ignore = true)
+    @Mapping(target = "photos", ignore = true)
     Conference map(ConferenceSingleRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "organizer", ignore = true)
-    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "logo", ignore = true)
     @Mapping(target = "participants", ignore = true)
     @Mapping(target = "lectures", ignore = true)
+    @Mapping(target = "photos", ignore = true)
     void update(@MappingTarget Conference conference, ConferenceSingleRequest request);
 }

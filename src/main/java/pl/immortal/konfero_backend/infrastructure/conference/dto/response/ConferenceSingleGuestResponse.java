@@ -18,10 +18,13 @@ public class ConferenceSingleGuestResponse {
     private UserShortResponse organizer;
     private String name;
     private String description;
-    private Image image;
+    private Image logo;
     private List<Conference.Tag> tags;
     private Location location;
     private List<LectureShortResponse> lectures;
     private boolean finished;
     private boolean canceled;
+    private int participantsLimit;
+    private Conference.Format format;
+    private List<Image> photos;
 }
