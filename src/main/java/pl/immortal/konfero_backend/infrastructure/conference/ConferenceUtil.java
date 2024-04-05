@@ -13,6 +13,11 @@ import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 public class ConferenceUtil {
     private final ConferenceRepository conferenceRepository;
 
+    public Conference getById(Long id) {
+        return Option.ofOptional(conferenceRepository.findById(id))
+                .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Conference not found"));
+    }
+
     public void save(Conference request) {
         Option.of(conferenceRepository.save(request))
                 .getOrElseThrow(

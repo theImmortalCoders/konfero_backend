@@ -21,6 +21,7 @@ import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +48,7 @@ public class ConferenceServiceTest {
     @BeforeEach
     public void setUp() {
         user = new User();
+        user.setId(1L);
         image = new Image();
         conference = new Conference();
         conference.setId(1L);
@@ -57,6 +59,7 @@ public class ConferenceServiceTest {
 
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
+        when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
         when(imageUtil.getImageById(any(Long.class))).thenReturn(image);
     }
 
@@ -90,6 +93,57 @@ public class ConferenceServiceTest {
         assertThrows(
                 ResponseStatusException.class,
                 () -> conferenceService.add(request)
+        );
+    }
+
+    @Test
+    public void shouldUpdateConferenceInfo() {
+        var request = new ConferenceSingleRequest();
+        request.setStartDateTime(LocalDateTime.now().plusMonths(1));
+        request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
+        request.setImageId(1L);
+
+        conferenceService.updateInfo(1L, request);
+
+        verify(conferenceUtil, times(1)).save(any(Conference.class));
+    }
+
+    @Test
+    public void shouldThrowForbiddenWhenAddConferenceInfo() {
+        var request = new ConferenceSingleRequest();
+        request.setStartDateTime(LocalDateTime.now().plusMonths(1));
+        request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
+        request.setImageId(1L);
+        User user2 = new User();
+        user2.setId(2L);
+        when(userUtil.getUserById(2L)).thenReturn(user2);
+        conference.setOrganizer(user2);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> conferenceService.updateInfo(1L, request)
+        );
+    }
+
+    @Test
+    public void shouldThrowBadRequestWhenUpdateConferenceInfo() {
+        var request = new ConferenceSingleRequest();
+        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
+        request.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
+        request.setImageId(1L);
+        conference.setOrganizer(user);
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> conferenceService.updateInfo(1L, request)
+        );
+
+        request.setStartDateTime(LocalDateTime.now().minusDays(1));
+        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
+
+        assertThrows(
+                ResponseStatusException.class,
+                () -> conferenceService.updateInfo(1L, request)
         );
     }
 }
