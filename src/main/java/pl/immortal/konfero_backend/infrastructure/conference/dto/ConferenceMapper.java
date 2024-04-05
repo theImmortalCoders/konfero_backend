@@ -9,8 +9,10 @@ import pl.immortal.konfero_backend.model.entity.Conference;
 
 @Mapper
 public interface ConferenceMapper {
+    @Mapping(target = "finished", ignore = true)
     ConferenceSingleResponse map(Conference conference);
 
+    @Mapping(target = "finished", ignore = true)
     ConferenceShortResponse shortMap(Conference conference);
 
     @Mapping(target = "id", ignore = true)

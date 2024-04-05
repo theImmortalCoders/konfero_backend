@@ -16,4 +16,5 @@ public class ConferenceShortResponse {
     private String name;
     private Image image;
     private Location location;
+    private boolean finished;
 }
