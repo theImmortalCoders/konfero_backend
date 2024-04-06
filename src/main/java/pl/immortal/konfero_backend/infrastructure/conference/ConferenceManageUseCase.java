@@ -11,10 +11,13 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.request.Confere
 import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
+import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,15 +28,18 @@ public class ConferenceManageUseCase {
     private final MailTemplateService mailTemplateService;
     private final ImageUtil imageUtil;
     private final UserUtil userUtil;
+    private final TagUtil tagUtil;
 
     void add(ConferenceSingleRequest request) {
         if (wrongDateTime(request)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad date or time");
         }
 
+        List<Tag> tags = tagUtil.getAllByIds(request.getTagsIds());
+
         Option.of(request)
                 .map(conferenceMapper::map)
-                .peek(c -> updateConferenceData(request, c))
+                .peek(c -> updateConferenceData(request, c, tags))
                 .peek(conferenceUtil::save);
     }
 
@@ -44,9 +50,11 @@ public class ConferenceManageUseCase {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad date or time");
         }
 
+        List<Tag> tags = tagUtil.getAllByIds(request.getTagsIds());
+
         Option.of(conference)
                 .peek(c -> conferenceMapper.update(c, request))
-                .peek(c -> updateConferenceData(request, c))
+                .peek(c -> updateConferenceData(request, c, tags))
                 .peek(conferenceUtil::save);
     }
 
@@ -82,7 +90,8 @@ public class ConferenceManageUseCase {
 
     //
 
-    private void updateConferenceData(ConferenceSingleRequest request, Conference c) {
+    private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
+        c.setTags(new ArrayList<>(tags));
         c.setOrganizer(userUtil.getCurrentUser());
         c.setLogo(imageUtil.getImageById(request.getLogoId()));
         c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));

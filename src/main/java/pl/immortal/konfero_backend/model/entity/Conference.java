@@ -27,8 +27,7 @@ public class Conference {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image logo;
-    @Type(JsonBinaryType.class)
-    @Column(columnDefinition = "jsonb")
+    @ManyToMany
     private List<Tag> tags = new ArrayList<>();
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
@@ -50,7 +49,7 @@ public class Conference {
     private List<Comment> comments;
     private boolean participantsFull;
 
-    public enum Tag {
+    public enum TagName {
         IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
     }
 

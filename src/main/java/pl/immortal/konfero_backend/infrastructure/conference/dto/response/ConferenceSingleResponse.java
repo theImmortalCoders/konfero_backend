@@ -7,6 +7,7 @@ import pl.immortal.konfero_backend.infrastructure.image.dto.ImageSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureShortResponse;
 import pl.immortal.konfero_backend.model.Location;
 import pl.immortal.konfero_backend.model.entity.Conference;
+import pl.immortal.konfero_backend.model.entity.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ConferenceSingleResponse {
     private String name;
     private String description;
     private ImageSingleResponse logo;
-    private List<Conference.Tag> tags;
+    private List<Tag> tags;
     private Location location;
     private List<UserShortResponse> participants;
     private List<LectureShortResponse> lectures;
