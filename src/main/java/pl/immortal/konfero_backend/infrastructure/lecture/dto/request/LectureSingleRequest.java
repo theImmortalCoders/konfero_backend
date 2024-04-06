@@ -13,5 +13,5 @@ public class LectureSingleRequest {
     private int durationMinutes;
     private Long imageId;
     private List<Long> lecturersIds;
-    private List<Long> materialsIds;
+    private String place;
 }

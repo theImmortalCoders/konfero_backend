@@ -21,4 +21,5 @@ public class UserSingleResponse {
     private String phone;
     private List<ConferenceShortResponse> conferencesOrganized;
     private List<ConferenceShortResponse> conferencesParticipated;
+    private boolean verified;
 }

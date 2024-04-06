@@ -20,4 +20,5 @@ public class LectureSingleResponse {
     private List<UserShortResponse> lecturers;
     private List<Material> materials;
     private List<UserShortResponse> interested;
+    private String place;
 }

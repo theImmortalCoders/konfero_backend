@@ -14,4 +14,5 @@ public class LectureShortResponse {
     private Image image;
     private Long conferenceId;
     private Long interestedAmount;
+    private String place;
 }

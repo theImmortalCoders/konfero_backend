@@ -21,6 +21,7 @@ public class Lecture {
     private String description;
     private LocalDateTime startDateTime;
     private int durationMinutes;
+    private String place;
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
