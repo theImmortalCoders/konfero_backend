@@ -21,6 +21,7 @@ public class Lecture {
     private String description;
     private LocalDateTime startDateTime;
     private int durationMinutes;
+    private String place;
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
@@ -30,6 +31,9 @@ public class Lecture {
     @ManyToMany
     @ToString.Exclude
     private List<User> lecturers = new ArrayList<>();
+    @ManyToMany
+    @ToString.Exclude
+    private List<User> interested = new ArrayList<>();
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
     private List<Material> materials = new ArrayList<>();

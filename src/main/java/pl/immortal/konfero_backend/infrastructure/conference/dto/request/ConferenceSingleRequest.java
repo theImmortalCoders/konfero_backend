@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 public class ConferenceSingleRequest {
     private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
     private String name;
     private String description;
     private Long logoId;

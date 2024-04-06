@@ -43,6 +43,7 @@ public class User implements UserDetails, OAuth2User {
     private List<Conference> conferencesOrganized = new ArrayList<>();
     @ManyToMany
     private List<Conference> conferencesParticipated = new ArrayList<>();
+    private boolean verified;
 
     @Override
     public String getName() {

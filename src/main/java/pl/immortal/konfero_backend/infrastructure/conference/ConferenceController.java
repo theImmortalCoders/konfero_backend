@@ -21,7 +21,7 @@ public class ConferenceController {
     @ApiResponse(responseCode = "403")
     @ApiResponse(responseCode = "401")
     @ApiResponse(responseCode = "400")
-    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER')")
     public void add(@RequestBody ConferenceSingleRequest request) {
         conferenceService.add(request);
     }
@@ -33,7 +33,7 @@ public class ConferenceController {
     @ApiResponse(responseCode = "401")
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "404", description = "Conference not found")
-    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER')")
     public void updateInfo(@PathVariable Long conferenceId, @RequestBody ConferenceSingleRequest request) {
         conferenceService.updateInfo(conferenceId, request);
     }

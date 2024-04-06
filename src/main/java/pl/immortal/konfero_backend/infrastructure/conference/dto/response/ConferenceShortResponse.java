@@ -21,4 +21,5 @@ public class ConferenceShortResponse {
     private boolean canceled;
     private int participantsLimit;
     private Conference.Format format;
+    private boolean verified;
 }

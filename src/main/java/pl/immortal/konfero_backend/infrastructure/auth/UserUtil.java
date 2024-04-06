@@ -9,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 public class UserUtil {
@@ -25,6 +27,10 @@ public class UserUtil {
                 .getOrElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
                 );
+    }
+
+    public List<User> getUsersByIds(List<Long> usersIds) {
+        return userRepository.findAllById(usersIds);
     }
 
     public void saveUser(User user) {

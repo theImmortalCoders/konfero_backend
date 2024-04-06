@@ -33,11 +33,7 @@ public class ConferenceService {
 
         Option.of(request)
                 .map(conferenceMapper::map)
-                .peek(c -> {
-                    c.setOrganizer(userUtil.getCurrentUser());
-                    c.setLogo(imageUtil.getImageById(request.getLogoId()));
-                    c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
-                })
+                .peek(c -> updateConferenceData(request, c))
                 .peek(conferenceUtil::save);
     }
 
@@ -49,12 +45,8 @@ public class ConferenceService {
         }
 
         Option.of(conference)
-                .peek(c -> {
-                    conferenceMapper.update(c, request);
-                    c.setOrganizer(userUtil.getCurrentUser());
-                    c.setLogo(imageUtil.getImageById(request.getLogoId()));
-                    c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
-                })
+                .peek(c -> conferenceMapper.update(c, request))
+                .peek(c -> updateConferenceData(request, c))
                 .peek(conferenceUtil::save);
     }
 
@@ -90,15 +82,19 @@ public class ConferenceService {
 
     //
 
+    private void updateConferenceData(ConferenceSingleRequest request, Conference c) {
+        c.setOrganizer(userUtil.getCurrentUser());
+        c.setLogo(imageUtil.getImageById(request.getLogoId()));
+        c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
+        conferenceUtil.updateConferenceEndTimeByLectures(c);
+        if (c.getOrganizer().isVerified()) {
+            c.setVerified(true);
+        }
+    }
+
     private Conference getConferenceWithUserCheck(Long conferenceId) {
         User user = userUtil.getCurrentUser();
-        Conference conference = conferenceUtil.getById(conferenceId);
-
-        if (userDoNotOwnConference(user, conference)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own a conference");
-        }
-
-        return conference;
+        return conferenceUtil.getByIdWithAuthorCheck(user, conferenceId);
     }
 
     private static boolean userDoNotOwnConference(User user, Conference conference) {
@@ -106,7 +102,6 @@ public class ConferenceService {
     }
 
     private static boolean wrongDateTime(ConferenceSingleRequest request) {
-        return request.getStartDateTime().isBefore(LocalDateTime.now())
-                || request.getStartDateTime().isAfter(request.getEndDateTime());
+        return request.getStartDateTime().isBefore(LocalDateTime.now());
     }
 }

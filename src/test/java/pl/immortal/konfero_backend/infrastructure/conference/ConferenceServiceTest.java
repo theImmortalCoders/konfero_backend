@@ -70,7 +70,6 @@ public class ConferenceServiceTest {
     public void shouldAddConference() {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         request.setLogoId(1L);
 
         conferenceService.add(request);
@@ -81,17 +80,10 @@ public class ConferenceServiceTest {
     @Test
     public void shouldThrowBadRequestWhenAddConference() {
         var request = new ConferenceSingleRequest();
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
         request.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         request.setLogoId(1L);
 
-        assertThrows(
-                ResponseStatusException.class,
-                () -> conferenceService.add(request)
-        );
-
         request.setStartDateTime(LocalDateTime.now().minusDays(1));
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
 
         assertThrows(
                 ResponseStatusException.class,
@@ -103,7 +95,6 @@ public class ConferenceServiceTest {
     public void shouldUpdateConferenceInfo() {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         request.setLogoId(1L);
 
         conferenceService.updateInfo(1L, request);
@@ -115,7 +106,6 @@ public class ConferenceServiceTest {
     public void shouldThrowForbiddenWhenAddConferenceInfo() {
         var request = new ConferenceSingleRequest();
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         request.setLogoId(1L);
         User user2 = new User();
         user2.setId(2L);
@@ -131,18 +121,11 @@ public class ConferenceServiceTest {
     @Test
     public void shouldThrowBadRequestWhenUpdateConferenceInfo() {
         var request = new ConferenceSingleRequest();
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
         request.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         request.setLogoId(1L);
         conference.setOrganizer(user);
 
-        assertThrows(
-                ResponseStatusException.class,
-                () -> conferenceService.updateInfo(1L, request)
-        );
-
         request.setStartDateTime(LocalDateTime.now().minusDays(1));
-        request.setEndDateTime(LocalDateTime.now().plusMonths(1));
 
         assertThrows(
                 ResponseStatusException.class,
