@@ -13,7 +13,7 @@ public class ConferenceSingleRequest {
     private String name;
     private String description;
     private Long logoId;
-    private List<Conference.Tag> tags;
+    private List<Long> tagsIds;
     private Location location;
     private int participantsLimit;
     private Conference.Format format;

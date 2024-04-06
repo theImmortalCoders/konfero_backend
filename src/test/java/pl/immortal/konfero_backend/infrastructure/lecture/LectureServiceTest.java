@@ -17,6 +17,7 @@ import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapperImpl;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Image;
@@ -143,5 +144,17 @@ public class LectureServiceTest {
         lectureService.delete(1L);
 
         verify(lectureRepository, times(1)).delete(any(Lecture.class));
+    }
+
+    @Test
+    public void shouldGetLectureResponse() {
+        var response = new LectureSingleResponse();
+        response.setId(1L);
+        response.setLecturers(new ArrayList<>());
+        response.setMaterials(new ArrayList<>());
+        response.setInterested(new ArrayList<>());
+        response.setConferenceId(1L);
+
+        assertEquals(response, lectureService.getById(1L));
     }
 }

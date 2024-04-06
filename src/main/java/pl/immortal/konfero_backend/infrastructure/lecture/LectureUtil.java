@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
+import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.LectureRepository;
@@ -14,11 +15,15 @@ import pl.immortal.konfero_backend.model.entity.repository.LectureRepository;
 public class LectureUtil {
     private final LectureRepository lectureRepository;
 
-    public Lecture getByIdWithAuthorityCheck(Long lectureId, User user) {
-        Lecture lecture = Option.ofOptional(lectureRepository.findById(lectureId))
+    public Lecture getById(Long lectureId) {
+        return Option.ofOptional(lectureRepository.findById(lectureId))
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecture not found"));
+    }
 
-        if (!userIsOwner(user, lecture) && !userIsLecturer(user, lecture)) {
+    public Lecture getByIdWithAuthorityCheck(Long lectureId, User user) {
+        Lecture lecture = getById(lectureId);
+
+        if (!userIsOwner(user, lecture) && !userIsLecturer(user, lecture) && !user.getRole().equals(Role.ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own a conference");
         }
 
