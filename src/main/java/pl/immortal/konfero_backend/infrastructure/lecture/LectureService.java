@@ -11,6 +11,7 @@ import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Lecture;
@@ -18,7 +19,6 @@ import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.LectureRepository;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -52,7 +52,6 @@ public class LectureService {
         conferenceUtil.updateConferenceEndTimeByLectures(conference);
         conferenceUtil.save(conference);
     }
-
 
 
     void updateOrganizer(Long lectureId, LectureSingleOrganizerRequest request) {
@@ -94,6 +93,12 @@ public class LectureService {
         conferenceUtil.save(conference);
 
         lectureRepository.delete(lecture);
+    }
+
+    public LectureSingleResponse getById(Long lectureId) {
+        return Option.of(lectureUtil.getById(lectureId))
+                .map(lectureMapper::map)
+                .get();
     }
 
     //

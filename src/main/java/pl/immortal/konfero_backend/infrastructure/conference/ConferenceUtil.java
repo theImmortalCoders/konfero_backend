@@ -11,6 +11,7 @@ import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 @Component
@@ -59,9 +60,10 @@ public class ConferenceUtil {
 
     public void sortLectures(Conference conference) {
         conference.setLectures(
-                conference.getLectures()
-                        .stream()
-                        .sorted(Comparator.comparing(Lecture::getStartDateTime)).toList()
+                new ArrayList<>(
+                        conference.getLectures()
+                                .stream()
+                                .sorted(Comparator.comparing(Lecture::getStartDateTime)).toList())
         );
     }
 

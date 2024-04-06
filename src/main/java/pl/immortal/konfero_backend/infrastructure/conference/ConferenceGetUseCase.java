@@ -29,6 +29,8 @@ public class ConferenceGetUseCase {
         return conferenceMapper.map(conference);
     }
 
+    //todo filter and sort allConferences with role check
+
     //
 
     private static void updateFullStatus(Conference conference) {

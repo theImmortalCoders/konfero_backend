@@ -15,9 +15,13 @@ import pl.immortal.konfero_backend.model.entity.repository.LectureRepository;
 public class LectureUtil {
     private final LectureRepository lectureRepository;
 
-    public Lecture getByIdWithAuthorityCheck(Long lectureId, User user) {
-        Lecture lecture = Option.ofOptional(lectureRepository.findById(lectureId))
+    public Lecture getById(Long lectureId) {
+        return Option.ofOptional(lectureRepository.findById(lectureId))
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecture not found"));
+    }
+
+    public Lecture getByIdWithAuthorityCheck(Long lectureId, User user) {
+        Lecture lecture = getById(lectureId);
 
         if (!userIsOwner(user, lecture) && !userIsLecturer(user, lecture) && !user.getRole().equals(Role.ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own a conference");

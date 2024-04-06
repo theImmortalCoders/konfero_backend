@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
 
 @RestController
 @Tag(name = "Lecture", description = "Lecture CRUD")
@@ -63,4 +65,13 @@ public class LectureController {
     public void deleteLecture(@PathVariable Long lectureId) {
         lectureService.delete(lectureId);
     }
+
+    @GetMapping("/{lectureId}")
+    @Operation(summary = "Get lecture details")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "404", description = "Conference not found")
+    public ResponseEntity<LectureSingleResponse> getById(@PathVariable Long lectureId) {
+        return ResponseEntity.ok(lectureService.getById(lectureId));
+    }
+
 }
