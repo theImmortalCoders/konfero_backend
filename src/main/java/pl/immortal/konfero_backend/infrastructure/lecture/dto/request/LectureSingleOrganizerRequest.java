@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class LectureSingleRequest {
+public class LectureSingleOrganizerRequest {
     private String name;
     private String description;
     private LocalDateTime startDateTime;
