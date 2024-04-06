@@ -3,6 +3,7 @@ package pl.immortal.konfero_backend.infrastructure.auth;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +22,15 @@ public class UserUtil {
         return Option.ofOptional(userRepository.findByEmail(username))
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+    public User getCurrentUserOrNull() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+            return getCurrentUser();
+        }
+        return null;
+    }
+
 
     public User getUserById(Long userId) {
         return Option.ofOptional(userRepository.findById(userId))

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
-public class ConferenceService {
+public class ConferenceManageUseCase {
     private final ConferenceRepository conferenceRepository;
     private final ConferenceMapper conferenceMapper;
     private final ConferenceUtil conferenceUtil;

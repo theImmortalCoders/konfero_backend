@@ -48,6 +48,7 @@ public class Conference {
     private boolean verified;
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+    private boolean participantsFull;
 
     public enum Tag {
         IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION

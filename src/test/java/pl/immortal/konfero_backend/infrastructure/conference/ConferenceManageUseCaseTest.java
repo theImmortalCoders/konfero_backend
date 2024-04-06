@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ConferenceServiceTest {
+public class ConferenceManageUseCaseTest {
     private Conference conference;
     private User user;
     private Image image;
@@ -46,7 +46,7 @@ public class ConferenceServiceTest {
     @Mock
     private ImageUtil imageUtil;
     @InjectMocks
-    private ConferenceService conferenceService;
+    private ConferenceManageUseCase conferenceManageUseCase;
 
     @BeforeEach
     public void setUp() {
@@ -72,7 +72,7 @@ public class ConferenceServiceTest {
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
         request.setLogoId(1L);
 
-        conferenceService.add(request);
+        conferenceManageUseCase.add(request);
 
         verify(conferenceUtil, times(1)).save(any(Conference.class));
     }
@@ -87,7 +87,7 @@ public class ConferenceServiceTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> conferenceService.add(request)
+                () -> conferenceManageUseCase.add(request)
         );
     }
 
@@ -97,7 +97,7 @@ public class ConferenceServiceTest {
         request.setStartDateTime(LocalDateTime.now().plusMonths(1));
         request.setLogoId(1L);
 
-        conferenceService.updateInfo(1L, request);
+        conferenceManageUseCase.updateInfo(1L, request);
 
         verify(conferenceUtil, times(1)).save(any(Conference.class));
     }
@@ -114,7 +114,7 @@ public class ConferenceServiceTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> conferenceService.updateInfo(1L, request)
+                () -> conferenceManageUseCase.updateInfo(1L, request)
         );
     }
 
@@ -129,13 +129,13 @@ public class ConferenceServiceTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> conferenceService.updateInfo(1L, request)
+                () -> conferenceManageUseCase.updateInfo(1L, request)
         );
     }
 
     @Test
     public void shouldCancelConference() {
-        conferenceService.cancel(1L);
+        conferenceManageUseCase.cancel(1L);
 
         assertTrue(conference.isCanceled());
     }
@@ -146,13 +146,13 @@ public class ConferenceServiceTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> conferenceService.cancel(1L)
+                () -> conferenceManageUseCase.cancel(1L)
         );
     }
 
     @Test
     public void shouldDeleteConference() {
-        conferenceService.delete(1L);
+        conferenceManageUseCase.delete(1L);
 
         verify(conferenceRepository, times(1)).delete(any(Conference.class));
     }
@@ -163,7 +163,7 @@ public class ConferenceServiceTest {
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> conferenceService.delete(1L)
+                () -> conferenceManageUseCase.delete(1L)
         );
     }
 }
