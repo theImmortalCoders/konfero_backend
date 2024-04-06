@@ -17,6 +17,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.request.Confere
 import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Image;
+import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
@@ -36,7 +37,10 @@ public class ConferenceManageUseCaseTest {
     private Conference conference;
     private User user;
     private Image image;
+    private Tag tag;
     private final ConferenceRepository conferenceRepository = mock(ConferenceRepository.class);
+    @Mock
+    private TagUtil tagUtil;
     @Spy
     private final ConferenceMapper conferenceMapper = new ConferenceMapperImpl();
     @Spy
@@ -59,11 +63,15 @@ public class ConferenceManageUseCaseTest {
         conference.setLogo(image);
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1));
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
+        tag = new Tag();
+        tag.setId(1L);
+        tag.setTagName(Conference.TagName.IT);
 
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
         when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
         when(imageUtil.getImageById(any(Long.class))).thenReturn(image);
+        when(tagUtil.getAllByIds(anyList())).thenReturn(new ArrayList<>(List.of(tag)));
     }
 
     @Test
