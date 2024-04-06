@@ -9,11 +9,13 @@ import pl.immortal.konfero_backend.infrastructure.auth.UserUtil;
 import pl.immortal.konfero_backend.infrastructure.conference.ConferenceUtil;
 import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
-import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
+import pl.immortal.konfero_backend.model.entity.repository.LectureRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class LectureService {
+    private final LectureRepository lectureRepository;
     private final LectureMapper lectureMapper;
     private final LectureUtil lectureUtil;
     private final ConferenceUtil conferenceUtil;
@@ -28,7 +31,7 @@ public class LectureService {
     private final ImageUtil imageUtil;
     private final MailTemplateService mailTemplateService;
 
-    public void add(Long conferenceId, LectureSingleRequest request) {
+    public void add(Long conferenceId, LectureSingleOrganizerRequest request) {
         Conference conference = getConferenceWithTimeCheck(conferenceId, request.getStartDateTime());
         List<User> lecturers = userUtil.getUsersByIds(request.getLecturersIds());
 
@@ -46,6 +49,44 @@ public class LectureService {
         conference.getLectures().add(lecture);
         conferenceUtil.updateConferenceEndTimeByLectures(conference);
         conferenceUtil.save(conference);
+    }
+
+    public void updateOrganizer(Long lectureId, LectureSingleOrganizerRequest request) {
+        Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+        List<User> lecturers = userUtil.getUsersByIds(request.getLecturersIds());
+        Conference conference = lecture.getConference();
+        conference.getLectures().remove(lecture);
+
+        Option.of(lecture)
+                .peek(l -> lectureMapper.update(l, request))
+                .peek(l -> {
+                    l.setImage(imageUtil.getImageById(request.getImageId()));
+                    l.setLecturers(lecturers);
+                    sendAddInfoToLecturers(l, conference);
+                })
+                .peek(lectureUtil::save);
+
+        conference.getLectures().add(lecture);
+        conferenceUtil.updateConferenceEndTimeByLectures(conference);
+        conferenceUtil.save(conference);
+    }
+
+    public void updateLecturer(Long lectureId, LectureSingleLecturerRequest request) {
+        Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+        lecture.setDescription(request.getDescription());
+        lecture.setImage(imageUtil.getImageById(request.getImageId()));
+        lectureUtil.save(lecture);
+    }
+
+    public void delete(Long lectureId) {
+        Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+        Conference conference = lecture.getConference();
+
+        conference.getLectures().remove(lecture);
+        conferenceUtil.updateConferenceEndTimeByLectures(conference);
+        conferenceUtil.save(conference);
+
+        lectureRepository.delete(lecture);
     }
 
     //
