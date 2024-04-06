@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.Conference;
+import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
@@ -54,6 +55,14 @@ public class ConferenceUtil {
         }
 
         conference.setEndDateTime(lastLecture.getStartDateTime().plusMinutes(lastLecture.getDurationMinutes()));
+    }
+
+    public void sortLectures(Conference conference) {
+        conference.setLectures(
+                conference.getLectures()
+                        .stream()
+                        .sorted(Comparator.comparing(Lecture::getStartDateTime)).toList()
+        );
     }
 
     public void save(Conference request) {
