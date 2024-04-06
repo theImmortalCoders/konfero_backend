@@ -19,4 +19,5 @@ public class LectureSingleResponse {
     private Long conferenceId;
     private List<UserShortResponse> lecturers;
     private List<Material> materials;
+    private List<UserShortResponse> interested;
 }

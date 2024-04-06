@@ -2,6 +2,7 @@ package pl.immortal.konfero_backend.infrastructure.conference.dto.response;
 
 import lombok.Data;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
+import pl.immortal.konfero_backend.infrastructure.comment.dto.CommentSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureShortResponse;
 import pl.immortal.konfero_backend.model.Location;
 import pl.immortal.konfero_backend.model.entity.Conference;
@@ -27,4 +28,6 @@ public class ConferenceSingleGuestResponse {
     private int participantsLimit;
     private Conference.Format format;
     private List<Image> photos;
+    private boolean verified;
+    private List<CommentSingleResponse> comments;
 }

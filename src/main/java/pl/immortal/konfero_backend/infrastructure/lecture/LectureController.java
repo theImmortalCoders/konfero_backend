@@ -11,4 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class LectureController {
     private final LectureService lectureService;
+
+
 }

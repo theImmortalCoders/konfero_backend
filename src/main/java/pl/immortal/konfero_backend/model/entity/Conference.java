@@ -45,10 +45,14 @@ public class Conference {
     private Format format = Format.STATIONARY;
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<Image> photos;
+    private boolean verified;
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     public enum Tag {
         IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
     }
+
     public enum Format {
         STATIONARY, ONLINE
     }

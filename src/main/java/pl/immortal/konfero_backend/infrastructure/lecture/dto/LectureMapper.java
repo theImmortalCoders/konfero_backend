@@ -13,6 +13,7 @@ public interface LectureMapper {
     LectureSingleResponse map(Lecture lecture);
 
     @Mapping(target = "conferenceId", source = "conference.id")
+    @Mapping(target = "interestedAmount", ignore = true)
     LectureShortResponse shortMap(Lecture lecture);
 
     @Mapping(target = "id", ignore = true)
