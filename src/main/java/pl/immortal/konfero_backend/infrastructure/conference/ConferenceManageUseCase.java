@@ -10,6 +10,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMappe
 import pl.immortal.konfero_backend.infrastructure.conference.dto.request.ConferenceSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
+import pl.immortal.konfero_backend.infrastructure.tag.TagUtil;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
@@ -91,7 +92,7 @@ public class ConferenceManageUseCase {
     //
 
     private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
-        if(request.getLogoId() != null){
+        if (request.getLogoId() != null) {
             c.setLogo(imageUtil.getImageById(request.getLogoId()));
         }
         c.setTags(new ArrayList<>(tags));

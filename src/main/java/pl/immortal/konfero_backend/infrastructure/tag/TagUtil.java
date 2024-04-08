@@ -1,4 +1,4 @@
-package pl.immortal.konfero_backend.infrastructure.conference;
+package pl.immortal.konfero_backend.infrastructure.tag;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
