@@ -10,6 +10,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMappe
 import pl.immortal.konfero_backend.infrastructure.conference.dto.request.ConferenceSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
+import pl.immortal.konfero_backend.infrastructure.tag.TagUtil;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
@@ -91,9 +92,11 @@ public class ConferenceManageUseCase {
     //
 
     private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
+        if (request.getLogoId() != null) {
+            c.setLogo(imageUtil.getImageById(request.getLogoId()));
+        }
         c.setTags(new ArrayList<>(tags));
         c.setOrganizer(userUtil.getCurrentUser());
-        c.setLogo(imageUtil.getImageById(request.getLogoId()));
         c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
         conferenceUtil.updateConferenceEndTimeByLectures(c);
         if (c.getOrganizer().isVerified()) {
@@ -104,10 +107,6 @@ public class ConferenceManageUseCase {
     private Conference getConferenceWithUserCheck(Long conferenceId) {
         User user = userUtil.getCurrentUser();
         return conferenceUtil.getByIdWithAuthorCheck(user, conferenceId);
-    }
-
-    private static boolean userDoNotOwnConference(User user, Conference conference) {
-        return !user.getId().equals(conference.getOrganizer().getId());
     }
 
     private static boolean wrongDateTime(ConferenceSingleRequest request) {

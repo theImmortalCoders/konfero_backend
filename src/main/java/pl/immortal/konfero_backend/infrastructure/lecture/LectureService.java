@@ -39,10 +39,7 @@ public class LectureService {
         Lecture lecture = Option.of(request)
                 .map(lectureMapper::map)
                 .peek(l -> {
-                    l.setImage(imageUtil.getImageById(request.getImageId()));
-                    l.setLecturers(lecturers);
-                    l.setConference(conference);
-                    sendAddInfoToLecturers(l, conference);
+                    updateConferenceData(request, l, lecturers, conference);
                 })
                 .peek(lectureUtil::save)
                 .get();
@@ -54,7 +51,7 @@ public class LectureService {
     }
 
 
-    void updateOrganizer(Long lectureId, LectureSingleOrganizerRequest request) {
+    void updateAsOrganizer(Long lectureId, LectureSingleOrganizerRequest request) {
         Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
         List<User> lecturers = userUtil.getUsersByIds(request.getLecturersIds());
         Conference conference = lecture.getConference();
@@ -63,9 +60,7 @@ public class LectureService {
         Option.of(lecture)
                 .peek(l -> lectureMapper.update(l, request))
                 .peek(l -> {
-                    l.setImage(imageUtil.getImageById(request.getImageId()));
-                    l.setLecturers(lecturers);
-                    sendAddInfoToLecturers(l, conference);
+                    updateConferenceData(request, l, lecturers, conference);
                     sendAddInfoToParticipants(l, conference);
                 })
                 .peek(lectureUtil::save);
@@ -76,10 +71,12 @@ public class LectureService {
         conferenceUtil.save(conference);
     }
 
-    void updateLecturer(Long lectureId, LectureSingleLecturerRequest request) {
+    void updateAsLecturer(Long lectureId, LectureSingleLecturerRequest request) {
         Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
         lecture.setDescription(request.getDescription());
-        lecture.setImage(imageUtil.getImageById(request.getImageId()));
+        if (request.getImageId() != null) {
+            lecture.setImage(imageUtil.getImageById(request.getImageId()));
+        }
         lectureUtil.save(lecture);
     }
 
@@ -95,13 +92,22 @@ public class LectureService {
         lectureRepository.delete(lecture);
     }
 
-    public LectureSingleResponse getById(Long lectureId) {
+    LectureSingleResponse getById(Long lectureId) {
         return Option.of(lectureUtil.getById(lectureId))
                 .map(lectureMapper::map)
                 .get();
     }
 
     //
+
+    private void updateConferenceData(LectureSingleOrganizerRequest request, Lecture l, List<User> lecturers, Conference conference) {
+        if (request.getImageId() != null) {
+            l.setImage(imageUtil.getImageById(request.getImageId()));
+        }
+        l.setLecturers(lecturers);
+        l.setConference(conference);
+        sendAddInfoToLecturers(l, conference);
+    }
 
     private void sendAddInfoToLecturers(Lecture l, Conference conference) {
         for (var lecturer : l.getLecturers()) {

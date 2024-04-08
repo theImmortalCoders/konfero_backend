@@ -120,7 +120,7 @@ public class LectureServiceTest {
         conference.setOrganizer(user);
         conference.getLectures().add(lecture);
 
-        lectureService.updateOrganizer(1L, request);
+        lectureService.updateAsOrganizer(1L, request);
 
         assertEquals(conference.getEndDateTime(), conference.getStartDateTime().plusMinutes(60));
     }
@@ -131,7 +131,7 @@ public class LectureServiceTest {
         conference.setOrganizer(user);
         conference.getLectures().add(lecture);
 
-        lectureService.updateLecturer(1L, request);
+        lectureService.updateAsLecturer(1L, request);
 
         verify(lectureRepository, times(1)).save(any(Lecture.class));
     }

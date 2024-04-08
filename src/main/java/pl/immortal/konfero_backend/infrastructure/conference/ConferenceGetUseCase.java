@@ -22,7 +22,6 @@ public class ConferenceGetUseCase {
     private final ConferenceMapper conferenceMapper;
     private final ConferenceRepository conferenceRepository;
     private final UserUtil userUtil;
-    private final TagUtil tagUtil;
 
     public ConferenceSingleResponse getDetails(Long conferenceId) {
         User user = userUtil.getCurrentUserOrNull();

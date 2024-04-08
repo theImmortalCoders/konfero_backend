@@ -3,6 +3,7 @@ package pl.immortal.konfero_backend.infrastructure.conference;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class ConferenceController {
     @ApiResponse(responseCode = "401")
     @ApiResponse(responseCode = "400")
     @PreAuthorize("hasAnyAuthority('ORGANIZER')")
-    public void add(@RequestBody ConferenceSingleRequest request) {
+    public void add(@RequestBody @Valid ConferenceSingleRequest request) {
         conferenceManageUseCase.add(request);
     }
 
@@ -45,12 +46,12 @@ public class ConferenceController {
     @ApiResponse(responseCode = "400")
     @ApiResponse(responseCode = "404", description = "Conference not found")
     @PreAuthorize("hasAnyAuthority('ORGANIZER')")
-    public void updateInfo(@PathVariable Long conferenceId, @RequestBody ConferenceSingleRequest request) {
+    public void updateInfo(@PathVariable Long conferenceId, @RequestBody @Valid ConferenceSingleRequest request) {
         conferenceManageUseCase.updateInfo(conferenceId, request);
     }
 
     @PatchMapping("/{conferenceId}/cancel")
-    @Operation(summary = "Cancel conference (Organizer)", description = "Organizer role required")
+    @Operation(summary = "Cancel conference (Organizer, Admin)", description = "Organizer role required")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
     @ApiResponse(responseCode = "401")
@@ -61,7 +62,7 @@ public class ConferenceController {
     }
 
     @DeleteMapping("/{conferenceId}")
-    @Operation(summary = "Delete conference (Organizer)", description = "Only no participants, organizer role required")
+    @Operation(summary = "Delete conference (Organizer, Admin)", description = "Only no participants, organizer role required")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
     @ApiResponse(responseCode = "401")
