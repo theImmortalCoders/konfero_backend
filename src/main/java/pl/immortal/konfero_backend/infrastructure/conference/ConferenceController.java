@@ -50,7 +50,7 @@ public class ConferenceController {
     }
 
     @PatchMapping("/{conferenceId}/cancel")
-    @Operation(summary = "Cancel conference (Organizer)", description = "Organizer role required")
+    @Operation(summary = "Cancel conference (Organizer, Admin)", description = "Organizer role required")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
     @ApiResponse(responseCode = "401")
@@ -61,7 +61,7 @@ public class ConferenceController {
     }
 
     @DeleteMapping("/{conferenceId}")
-    @Operation(summary = "Delete conference (Organizer)", description = "Only no participants, organizer role required")
+    @Operation(summary = "Delete conference (Organizer, Admin)", description = "Only no participants, organizer role required")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
     @ApiResponse(responseCode = "401")
