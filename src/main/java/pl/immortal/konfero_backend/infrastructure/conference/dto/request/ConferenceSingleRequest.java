@@ -15,7 +15,7 @@ public class ConferenceSingleRequest {
     private Long logoId;
     private List<Long> tagsIds;
     private Location location;
-    private int participantsLimit;
+    private Integer participantsLimit;
     private Conference.Format format;
     private List<Long> photosIds;
 }

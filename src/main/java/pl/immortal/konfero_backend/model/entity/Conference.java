@@ -39,7 +39,7 @@ public class Conference {
     @ToString.Exclude
     private List<Lecture> lectures = new ArrayList<>();
     private boolean canceled;
-    private int participantsLimit;
+    private Integer participantsLimit;
     @Enumerated(EnumType.STRING)
     private Format format = Format.STATIONARY;
     @ManyToMany(cascade = CascadeType.REMOVE)

@@ -47,7 +47,7 @@ public class ConferenceGetUseCaseTest {
         conferenceSingleResponse = new ConferenceSingleResponse();
         conferenceSingleResponse.setId(1L);
         conferenceSingleResponse.setTags(new ArrayList<>());
-        conferenceSingleResponse.setParticipantsFull(true);
+        conferenceSingleResponse.setParticipantsFull(false);
         conferenceSingleResponse.setLectures(new ArrayList<>());
         conferenceSingleResponse.setFormat(Conference.Format.STATIONARY);
 
