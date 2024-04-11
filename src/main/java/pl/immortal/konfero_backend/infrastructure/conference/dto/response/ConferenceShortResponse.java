@@ -2,7 +2,7 @@ package pl.immortal.konfero_backend.infrastructure.conference.dto.response;
 
 import lombok.Data;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
-import pl.immortal.konfero_backend.infrastructure.image.dto.ImageSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.file.dto.FileSingleResponse;
 import pl.immortal.konfero_backend.model.Location;
 import pl.immortal.konfero_backend.model.entity.Conference;
 
@@ -15,7 +15,7 @@ public class ConferenceShortResponse {
     private LocalDateTime endDateTime;
     private UserShortResponse organizer;
     private String name;
-    private ImageSingleResponse logo;
+    private FileSingleResponse logo;
     private Location location;
     private boolean finished;
     private boolean canceled;

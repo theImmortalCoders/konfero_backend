@@ -3,10 +3,7 @@ package pl.immortal.konfero_backend.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,8 +37,10 @@ public class User implements UserDetails, OAuth2User {
     private String city;
     private String phone;
     @ManyToMany
+    @ToString.Exclude
     private List<Conference> conferencesOrganized = new ArrayList<>();
     @ManyToMany
+    @ToString.Exclude
     private List<Conference> conferencesParticipated = new ArrayList<>();
     private boolean verified;
 

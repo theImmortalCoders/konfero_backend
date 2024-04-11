@@ -26,7 +26,7 @@ public class Conference {
     private String description;
     @ManyToOne
     @JoinColumn(name = "image_id")
-    private Image logo;
+    private File logo;
     @ManyToMany
     private List<Tag> tags = new ArrayList<>();
     @Type(JsonBinaryType.class)
@@ -43,7 +43,7 @@ public class Conference {
     @Enumerated(EnumType.STRING)
     private Format format = Format.STATIONARY;
     @ManyToMany(cascade = CascadeType.REMOVE)
-    private List<Image> photos;
+    private List<File> photos;
     private boolean verified;
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<Comment> comments;

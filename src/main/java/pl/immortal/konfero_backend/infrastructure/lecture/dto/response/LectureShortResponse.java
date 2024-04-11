@@ -1,7 +1,7 @@
 package pl.immortal.konfero_backend.infrastructure.lecture.dto.response;
 
 import lombok.Data;
-import pl.immortal.konfero_backend.infrastructure.image.dto.ImageSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.file.dto.FileSingleResponse;
 
 import java.time.LocalDateTime;
 
@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 public class LectureShortResponse {
     private Long id;
     private String name;
+
     private LocalDateTime startDateTime;
     private int durationMinutes;
-    private ImageSingleResponse image;
+    private FileSingleResponse image;
     private String place;
 }
