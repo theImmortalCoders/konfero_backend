@@ -53,6 +53,7 @@ public class ConferenceGetUseCase {
         return new PageImpl<>(
                 conferences
                         .stream()
+                        .peek(ConferenceGetUseCase::updateFullStatus)
                         .map(conferenceMapper::shortMap)
                         .toList(), pageRequest, conferenceRepository.count()
         );
@@ -61,7 +62,7 @@ public class ConferenceGetUseCase {
     //
 
     private static void updateFullStatus(Conference conference) {
-        if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() >= conference.getParticipants().size()) {
+        if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
             conference.setParticipantsFull(true);
         }
     }

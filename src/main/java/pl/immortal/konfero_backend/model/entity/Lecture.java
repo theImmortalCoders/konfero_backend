@@ -1,10 +1,8 @@
 package pl.immortal.konfero_backend.model.entity;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public class Lecture {
     @ManyToMany
     @ToString.Exclude
     private List<User> interested = new ArrayList<>();
-    @Type(JsonBinaryType.class)
-    @Column(columnDefinition = "jsonb")
+    @ManyToMany
     private List<File> materials = new ArrayList<>();
 }

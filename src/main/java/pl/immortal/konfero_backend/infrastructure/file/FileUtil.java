@@ -22,7 +22,7 @@ public class FileUtil {
 
     public File getImageById(Long imageId) {
         return Option.ofOptional(fileRepository.findById(imageId))
-                .filter(f -> f.getFileType().equals(File.FileType.IMAGE))
+                .filter(f -> f.getFileType() != null && f.getFileType().equals(File.FileType.IMAGE))
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
     }
 

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class LectureShortResponse {
     private Long id;
     private String name;
+
     private LocalDateTime startDateTime;
     private int durationMinutes;
     private FileSingleResponse image;
