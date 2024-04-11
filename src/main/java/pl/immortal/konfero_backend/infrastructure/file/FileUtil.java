@@ -20,7 +20,16 @@ public class FileUtil {
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
     }
 
+    public File getImageById(Long imageId) {
+        return Option.ofOptional(fileRepository.findById(imageId))
+                .filter(f -> f.getFileType().equals(File.FileType.IMAGE))
+                .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
+    }
+
     public List<File> getImagesByIds(List<Long> ids) {
-        return fileRepository.findAllById(ids);
+        return fileRepository.findAllById(ids)
+                .stream()
+                .filter(f -> f.getFileType().equals(File.FileType.IMAGE))
+                .toList();
     }
 }

@@ -35,13 +35,14 @@ public class FileController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FileSingleResponse> uploadFile(
-            @RequestBody MultipartFile uploadedFile
+            @RequestBody MultipartFile uploadedFile,
+            @RequestParam String description
     ) throws IOException {
-        return ResponseEntity.ok(fileService.uploadFile(uploadedFile));
+        return ResponseEntity.ok(fileService.uploadFile(uploadedFile, description));
     }
 
     @GetMapping("/{fileId}")
-    @Operation(summary = "Download file id", description = "Downloads file or opens in new tab if pdf")
+    @Operation(summary = "Download file by id", description = "Downloads file or opens in new tab if pdf")
     @ApiResponse(responseCode = "200", description = "File downloaded successfully")
     @ApiResponse(responseCode = "404", description = "File not found")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) throws MalformedURLException, FileNotFoundException {

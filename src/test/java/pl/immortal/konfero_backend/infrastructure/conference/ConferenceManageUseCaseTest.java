@@ -71,7 +71,7 @@ public class ConferenceManageUseCaseTest {
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
         when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
-        when(fileUtil.getFileById(any(Long.class))).thenReturn(file);
+        when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
         when(tagUtil.getAllByIds(anyList())).thenReturn(new ArrayList<>(List.of(tag)));
     }
 

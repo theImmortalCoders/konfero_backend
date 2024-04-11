@@ -93,7 +93,7 @@ public class ConferenceManageUseCase {
 
     private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
         if (request.getLogoId() != null) {
-            c.setLogo(fileUtil.getFileById(request.getLogoId()));
+            c.setLogo(fileUtil.getImageById(request.getLogoId()));
         }
         c.setTags(new ArrayList<>(tags));
         c.setOrganizer(userUtil.getCurrentUser());

@@ -10,14 +10,14 @@ public class File {
     @GeneratedValue
     private Long id;
     private String path;
-    private boolean hasThumbnail;
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "author_id")
     private User author;
     @Enumerated(EnumType.STRING)
-    private FileType fileType;
+    private FileType fileType = FileType.UNDEFINED;
+    private String description;
 
     public enum FileType {
-        IMAGE, DOCUMENT, VIDEO, LINK
+        IMAGE, DOCUMENT, VIDEO, SOUND, UNDEFINED
     }
 }

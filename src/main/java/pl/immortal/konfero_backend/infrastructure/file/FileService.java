@@ -36,7 +36,7 @@ public class FileService {
     private final UserUtil userUtil;
     private final FileUtil fileUtil;
 
-    FileSingleResponse uploadFile(@NotNull MultipartFile fileRequest) throws IOException {
+    FileSingleResponse uploadFile(@NotNull MultipartFile fileRequest, String description) throws IOException {
         String uniqueFileName = LocalDateTime.now()
                 .toString()
                 .replaceAll(":", "_") + "_"
@@ -54,6 +54,8 @@ public class FileService {
         File file = new File();
         file.setAuthor(userUtil.getCurrentUser());
         file.setPath(uniqueFileName);
+        file.setDescription(description);
+        updateFileType(file);
 
         return fileMapper.map(saveFileDb(file));
     }
@@ -118,5 +120,18 @@ public class FileService {
                 .getOrElseThrow(
                         () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, file.toString())
                 );
+    }
+
+    private void updateFileType(File file) {
+        String extension = getFileExtension(file.getPath());
+        List<String> documents = List.of("pdf", "docx", "doc", "odt");
+        List<String> images = List.of("jpg", "jpeg", "png");
+        List<String> videos = List.of("mp4", "mpeg-4", "mov");
+        List<String> sounds = List.of("mp3", "wav");
+
+        if (documents.contains(extension)) file.setFileType(File.FileType.DOCUMENT);
+        if (images.contains(extension)) file.setFileType(File.FileType.IMAGE);
+        if (videos.contains(extension)) file.setFileType(File.FileType.VIDEO);
+        if (sounds.contains(extension)) file.setFileType(File.FileType.SOUND);
     }
 }
