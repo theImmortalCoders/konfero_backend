@@ -12,7 +12,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.UserUtil;
 import pl.immortal.konfero_backend.infrastructure.conference.ConferenceUtil;
-import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
+import pl.immortal.konfero_backend.infrastructure.file.FileUtil;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapperImpl;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
@@ -20,7 +20,7 @@ import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSin
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
-import pl.immortal.konfero_backend.model.entity.Image;
+import pl.immortal.konfero_backend.model.entity.File;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
@@ -42,7 +42,7 @@ public class LectureServiceTest {
     private Conference conference;
     private Lecture lecture;
     private User user;
-    private Image image;
+    private File file;
     private LocalDateTime startTime = LocalDateTime.now();
     private final LectureRepository lectureRepository = mock(LectureRepository.class);
     @Spy
@@ -55,7 +55,7 @@ public class LectureServiceTest {
     @Mock
     private UserUtil userUtil;
     @Mock
-    private ImageUtil imageUtil;
+    private FileUtil fileUtil;
     @Mock
     private MailTemplateService mailTemplateService;
     @InjectMocks
@@ -72,12 +72,12 @@ public class LectureServiceTest {
         lecture.setConference(conference);
         user = new User();
         user.setId(1L);
-        image = new Image();
-        image.setId(1L);
+        file = new File();
+        file.setId(1L);
 
         when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
         when(userUtil.getUsersByIds(new ArrayList<>(List.of(1L)))).thenReturn(new ArrayList<>(List.of(user)));
-        when(imageUtil.getImageById(any(Long.class))).thenReturn(image);
+        when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
         when(lectureRepository.save(any(Lecture.class))).thenReturn(lecture);

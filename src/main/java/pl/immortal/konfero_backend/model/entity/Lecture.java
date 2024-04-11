@@ -24,7 +24,7 @@ public class Lecture {
     private String place;
     @ManyToOne
     @JoinColumn(name = "image_id")
-    private Image image;
+    private File image;
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "conference_id")
     private Conference conference;

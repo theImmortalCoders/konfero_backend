@@ -1,4 +1,4 @@
-package pl.immortal.konfero_backend.infrastructure.image;
+package pl.immortal.konfero_backend.infrastructure.file;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.immortal.konfero_backend.infrastructure.image.dto.ImageSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.file.dto.FileSingleResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.List;
 @Tag(name = "Image", description = "Image retrieving operations")
 @RequestMapping("/api/image")
 @AllArgsConstructor
-public class ImageController {
+public class FileController {
 
-    private final ImageService imageService;
+    private final FileService fileService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Upload image to server (Auth)", description = "Max file size: 10MB")
@@ -29,11 +29,11 @@ public class ImageController {
     @ApiResponse(responseCode = "413", description = "Image too large")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ImageSingleResponse> uploadImage(
+    public ResponseEntity<FileSingleResponse> uploadImage(
             @RequestBody MultipartFile uploadedFile,
             @RequestParam(required = false, defaultValue = "false") Boolean thumbnail
     ) throws IOException {
-        return ResponseEntity.ok(imageService.uploadImage(uploadedFile, thumbnail));
+        return ResponseEntity.ok(fileService.uploadImage(uploadedFile, thumbnail));
     }
 
     @PostMapping(value = "/multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -42,11 +42,11 @@ public class ImageController {
     @ApiResponse(responseCode = "413", description = "Image too large")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<ImageSingleResponse>> uploadMultipleImages(
+    public ResponseEntity<List<FileSingleResponse>> uploadMultipleImages(
             @RequestParam List<MultipartFile> uploadedFiles,
             @RequestParam(required = false, defaultValue = "false") Boolean thumbnail
     ) {
-        return ResponseEntity.ok(imageService.uploadMultipleImages(uploadedFiles, thumbnail));
+        return ResponseEntity.ok(fileService.uploadMultipleImages(uploadedFiles, thumbnail));
     }
 
     @GetMapping("/{imageId}")
@@ -57,7 +57,7 @@ public class ImageController {
             @PathVariable Long imageId,
             @RequestParam(required = false, defaultValue = "false") Boolean thumbnail
     ) {
-        byte[] imageData = imageService.downloadImage(imageId, thumbnail);
+        byte[] imageData = fileService.downloadImage(imageId, thumbnail);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);
@@ -67,10 +67,10 @@ public class ImageController {
     @Operation(summary = "Get all images for user", description = "Returns array of image data")
     @ApiResponse(responseCode = "200", description = "Image downloaded successfully")
     @ApiResponse(responseCode = "404", description = "Image not found")
-    public ResponseEntity<List<ImageSingleResponse>> getImagesByUser(
+    public ResponseEntity<List<FileSingleResponse>> getImagesByUser(
             @RequestParam Long authorId
     ) {
-        return ResponseEntity.ok(imageService.getImagesIdsByUser(authorId));
+        return ResponseEntity.ok(fileService.getImagesIdsByUser(authorId));
     }
 
     @DeleteMapping("/{imageId}")
@@ -80,6 +80,6 @@ public class ImageController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PreAuthorize("isAuthenticated()")
     public void deleteImage(@PathVariable Long imageId) {
-        imageService.deleteImage(imageId);
+        fileService.deleteImage(imageId);
     }
 }
