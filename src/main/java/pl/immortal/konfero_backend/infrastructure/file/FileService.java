@@ -3,6 +3,8 @@ package pl.immortal.konfero_backend.infrastructure.file;
 import io.vavr.control.Option;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,16 +17,14 @@ import pl.immortal.konfero_backend.model.entity.File;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.FileRepository;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,11 +36,11 @@ public class FileService {
     private final UserUtil userUtil;
     private final FileUtil fileUtil;
 
-    FileSingleResponse uploadImage(@NotNull MultipartFile imageFile, Boolean thumbnail) throws IOException {
+    FileSingleResponse uploadFile(@NotNull MultipartFile fileRequest) throws IOException {
         String uniqueFileName = LocalDateTime.now()
                 .toString()
                 .replaceAll(":", "_") + "_"
-                + imageFile.getOriginalFilename();
+                + fileRequest.getOriginalFilename();
 
         Path uploadPath = Paths.get(path);
         Path filePath = uploadPath.resolve(uniqueFileName);
@@ -49,44 +49,30 @@ public class FileService {
             Files.createDirectories(uploadPath);
         }
 
-        Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(fileRequest.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         File file = new File();
         file.setAuthor(userUtil.getCurrentUser());
         file.setPath(uniqueFileName);
 
-        if (thumbnail) {
-            String thumbnailFileName = "thumbnail_" + uniqueFileName;
-            Path thumbnailFilePath = uploadPath.resolve(thumbnailFileName);
-            BufferedImage inputImage = ImageIO.read(filePath.toFile());
-            createThumbnail(filePath, thumbnailFilePath, inputImage.getWidth() / 3, inputImage.getHeight() / 3);
-            file.setHasThumbnail(true);
-        }
-
-        return fileMapper.map(saveImage(file));
+        return fileMapper.map(saveFileDb(file));
     }
 
-    List<FileSingleResponse> uploadMultipleImages(@NotNull List<MultipartFile> imageFiles, Boolean thumbnail) {
-        List<FileSingleResponse> imagesResponses = new ArrayList<>();
+    public Resource getFile(Long fileId) throws FileNotFoundException, MalformedURLException {
+        String fileName = fileUtil.getFileById(fileId).getPath();
 
-        for (MultipartFile imageFile : imageFiles) {
-            try {
-                imagesResponses.add(uploadImage(imageFile, thumbnail));
-            } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid request:" + imageFile);
-            }
+        Path filePath = Paths.get(path).resolve(fileName);
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new FileNotFoundException("File not found: " + fileId);
         }
-
-        return imagesResponses;
     }
 
-    byte[] downloadImage(Long imageId, @NotNull Boolean thumbnail) {
-        String imageName = fileUtil.getImageById(imageId).getPath();
-
-        if (thumbnail) {
-            imageName = "thumbnail_" + imageName;
-        }
-
+    byte[] downloadImage(Long imageId) {
+        String imageName = fileUtil.getFileById(imageId).getPath();
         Path imagePath = Paths.get(path, imageName);
 
         try {
@@ -96,7 +82,11 @@ public class FileService {
         }
     }
 
-    List<FileSingleResponse> getImagesIdsByUser(Long authorId) {
+    String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    List<FileSingleResponse> getFilesByUser(Long authorId) {
         User user = userUtil.getUserById(authorId);
         return fileRepository.findAllByAuthor(user)
                 .stream()
@@ -104,9 +94,9 @@ public class FileService {
                 .toList();
     }
 
-    void deleteImage(Long imageId) {
+    void deleteFile(Long imageId) {
         User user = userUtil.getCurrentUser();
-        File file = fileUtil.getImageById(imageId);
+        File file = fileUtil.getFileById(imageId);
 
         if (!user.getId().equals(file.getAuthor().getId()) && !user.getRole().equals(Role.ADMIN)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete image you not own");
@@ -123,21 +113,10 @@ public class FileService {
 
     //
 
-    private File saveImage(File file) {
+    private File saveFileDb(File file) {
         return Option.of(fileRepository.save(file))
                 .getOrElseThrow(
                         () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, file.toString())
                 );
-    }
-
-    private void createThumbnail(@NotNull Path sourcePath, @NotNull Path targetPath, int width, int height) throws IOException {
-        BufferedImage originalImage = ImageIO.read(sourcePath.toFile());
-        BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
-        Graphics2D g = resizedImage.createGraphics();
-
-        g.drawImage(originalImage, 0, 0, width, height, null);
-        g.dispose();
-
-        ImageIO.write(resizedImage, "png", targetPath.toFile());
     }
 }

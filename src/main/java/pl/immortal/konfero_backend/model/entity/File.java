@@ -17,7 +17,7 @@ public class File {
     @Enumerated(EnumType.STRING)
     private FileType fileType;
 
-    public enum FileType{
+    public enum FileType {
         IMAGE, DOCUMENT, VIDEO, LINK
     }
 }

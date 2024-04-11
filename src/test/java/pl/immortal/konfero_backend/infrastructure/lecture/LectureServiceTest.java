@@ -77,7 +77,7 @@ public class LectureServiceTest {
 
         when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
         when(userUtil.getUsersByIds(new ArrayList<>(List.of(1L)))).thenReturn(new ArrayList<>(List.of(user)));
-        when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
+        when(fileUtil.getFileById(any(Long.class))).thenReturn(file);
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
         when(lectureRepository.save(any(Lecture.class))).thenReturn(lecture);

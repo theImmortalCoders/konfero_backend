@@ -75,7 +75,7 @@ public class LectureService {
         Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
         lecture.setDescription(request.getDescription());
         if (request.getImageId() != null) {
-            lecture.setImage(fileUtil.getImageById(request.getImageId()));
+            lecture.setImage(fileUtil.getFileById(request.getImageId()));
         }
         lectureUtil.save(lecture);
     }
@@ -102,7 +102,7 @@ public class LectureService {
 
     private void updateConferenceData(LectureSingleOrganizerRequest request, Lecture l, List<User> lecturers, Conference conference) {
         if (request.getImageId() != null) {
-            l.setImage(fileUtil.getImageById(request.getImageId()));
+            l.setImage(fileUtil.getFileById(request.getImageId()));
         }
         l.setLecturers(lecturers);
         l.setConference(conference);

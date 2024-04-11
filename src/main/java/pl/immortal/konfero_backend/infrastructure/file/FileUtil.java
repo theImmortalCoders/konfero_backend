@@ -15,7 +15,7 @@ import java.util.List;
 public class FileUtil {
     private final FileRepository fileRepository;
 
-    public File getImageById(Long imageId) {
+    public File getFileById(Long imageId) {
         return Option.ofOptional(fileRepository.findById(imageId))
                 .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
     }
