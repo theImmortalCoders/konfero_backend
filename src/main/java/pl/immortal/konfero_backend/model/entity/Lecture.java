@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
-import pl.immortal.konfero_backend.model.Material;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class Lecture {
     private String place;
     @ManyToOne
     @JoinColumn(name = "image_id")
-    private Image image;
+    private File image;
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "conference_id")
     private Conference conference;
@@ -36,5 +34,5 @@ public class Lecture {
     private List<User> interested = new ArrayList<>();
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
-    private List<Material> materials = new ArrayList<>();
+    private List<File> materials = new ArrayList<>();
 }

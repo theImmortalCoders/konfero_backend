@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.UserUtil;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMapper;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.request.ConferenceSingleRequest;
-import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
+import pl.immortal.konfero_backend.infrastructure.file.FileUtil;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.infrastructure.tag.TagUtil;
 import pl.immortal.konfero_backend.model.entity.Conference;
@@ -27,7 +27,7 @@ public class ConferenceManageUseCase {
     private final ConferenceMapper conferenceMapper;
     private final ConferenceUtil conferenceUtil;
     private final MailTemplateService mailTemplateService;
-    private final ImageUtil imageUtil;
+    private final FileUtil fileUtil;
     private final UserUtil userUtil;
     private final TagUtil tagUtil;
 
@@ -93,11 +93,11 @@ public class ConferenceManageUseCase {
 
     private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
         if (request.getLogoId() != null) {
-            c.setLogo(imageUtil.getImageById(request.getLogoId()));
+            c.setLogo(fileUtil.getImageById(request.getLogoId()));
         }
         c.setTags(new ArrayList<>(tags));
         c.setOrganizer(userUtil.getCurrentUser());
-        c.setPhotos(imageUtil.getImagesByIds(request.getPhotosIds()));
+        c.setPhotos(fileUtil.getImagesByIds(request.getPhotosIds()));
         conferenceUtil.updateConferenceEndTimeByLectures(c);
         if (c.getOrganizer().isVerified()) {
             c.setVerified(true);

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Image {
+public class File {
     @Id
     @GeneratedValue
     private Long id;
@@ -14,4 +14,10 @@ public class Image {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "author_id")
     private User author;
+    @Enumerated(EnumType.STRING)
+    private FileType fileType;
+
+    public enum FileType{
+        IMAGE, DOCUMENT, VIDEO, LINK
+    }
 }

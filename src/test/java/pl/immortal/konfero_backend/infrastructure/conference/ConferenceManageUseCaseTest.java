@@ -14,10 +14,10 @@ import pl.immortal.konfero_backend.infrastructure.auth.UserUtil;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMapper;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMapperImpl;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.request.ConferenceSingleRequest;
-import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
+import pl.immortal.konfero_backend.infrastructure.file.FileUtil;
 import pl.immortal.konfero_backend.infrastructure.tag.TagUtil;
 import pl.immortal.konfero_backend.model.entity.Conference;
-import pl.immortal.konfero_backend.model.entity.Image;
+import pl.immortal.konfero_backend.model.entity.File;
 import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 public class ConferenceManageUseCaseTest {
     private Conference conference;
     private User user;
-    private Image image;
+    private File file;
     private Tag tag;
     private final ConferenceRepository conferenceRepository = mock(ConferenceRepository.class);
     @Mock
@@ -49,7 +49,7 @@ public class ConferenceManageUseCaseTest {
     @Mock
     private UserUtil userUtil;
     @Mock
-    private ImageUtil imageUtil;
+    private FileUtil fileUtil;
     @InjectMocks
     private ConferenceManageUseCase conferenceManageUseCase;
 
@@ -57,11 +57,11 @@ public class ConferenceManageUseCaseTest {
     public void setUp() {
         user = new User();
         user.setId(1L);
-        image = new Image();
+        file = new File();
         conference = new Conference();
         conference.setId(1L);
         conference.setOrganizer(user);
-        conference.setLogo(image);
+        conference.setLogo(file);
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1));
         conference.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
         tag = new Tag();
@@ -71,7 +71,7 @@ public class ConferenceManageUseCaseTest {
         when(userUtil.getCurrentUser()).thenReturn(user);
         when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
         when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
-        when(imageUtil.getImageById(any(Long.class))).thenReturn(image);
+        when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
         when(tagUtil.getAllByIds(anyList())).thenReturn(new ArrayList<>(List.of(tag)));
     }
 

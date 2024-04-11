@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.UserUtil;
 import pl.immortal.konfero_backend.infrastructure.conference.ConferenceUtil;
-import pl.immortal.konfero_backend.infrastructure.image.ImageUtil;
+import pl.immortal.konfero_backend.infrastructure.file.FileUtil;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
@@ -29,7 +29,7 @@ public class LectureService {
     private final LectureUtil lectureUtil;
     private final ConferenceUtil conferenceUtil;
     private final UserUtil userUtil;
-    private final ImageUtil imageUtil;
+    private final FileUtil fileUtil;
     private final MailTemplateService mailTemplateService;
 
     void add(Long conferenceId, LectureSingleOrganizerRequest request) {
@@ -75,7 +75,7 @@ public class LectureService {
         Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
         lecture.setDescription(request.getDescription());
         if (request.getImageId() != null) {
-            lecture.setImage(imageUtil.getImageById(request.getImageId()));
+            lecture.setImage(fileUtil.getImageById(request.getImageId()));
         }
         lectureUtil.save(lecture);
     }
@@ -102,7 +102,7 @@ public class LectureService {
 
     private void updateConferenceData(LectureSingleOrganizerRequest request, Lecture l, List<User> lecturers, Conference conference) {
         if (request.getImageId() != null) {
-            l.setImage(imageUtil.getImageById(request.getImageId()));
+            l.setImage(fileUtil.getImageById(request.getImageId()));
         }
         l.setLecturers(lecturers);
         l.setConference(conference);
