@@ -63,9 +63,9 @@ public class FileController {
     }
 
     @GetMapping("/{imageId}/image")
-    @Operation(summary = "Download image from server by id", description = "Returns file as byte array")
-    @ApiResponse(responseCode = "200", description = "File downloaded successfully")
-    @ApiResponse(responseCode = "404", description = "File not found")
+    @Operation(summary = "Download image from server by id", description = "Returns image as byte array")
+    @ApiResponse(responseCode = "200", description = "Image downloaded successfully")
+    @ApiResponse(responseCode = "404", description = "Image not found")
     public ResponseEntity<byte[]> downloadImage(
             @PathVariable Long imageId
     ) {
@@ -76,9 +76,8 @@ public class FileController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all images for user", description = "Returns array of image data")
-    @ApiResponse(responseCode = "200", description = "Image downloaded successfully")
-    @ApiResponse(responseCode = "404", description = "Image not found")
+    @Operation(summary = "Get all files for user", description = "Returns array of file data")
+    @ApiResponse(responseCode = "200", description = "Files downloaded successfully")
     public ResponseEntity<List<FileSingleResponse>> getFilesByUser(
             @RequestParam Long authorId
     ) {
@@ -86,10 +85,11 @@ public class FileController {
     }
 
     @DeleteMapping("/{fileId}")
-    @Operation(summary = "Delete image from server by id (Auth)", description = "Deletes image from server by name")
-    @ApiResponse(responseCode = "200", description = "Image deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Image not found")
+    @Operation(summary = "Delete file from server by id (Auth)")
+    @ApiResponse(responseCode = "200", description = "File deleted successfully")
+    @ApiResponse(responseCode = "404", description = "File not found")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "You not own the file")
     @PreAuthorize("isAuthenticated()")
     public void deleteFile(@PathVariable Long fileId) {
         fileService.deleteFile(fileId);
