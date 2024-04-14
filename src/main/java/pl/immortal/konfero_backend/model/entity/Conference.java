@@ -42,7 +42,7 @@ public class Conference {
     private Integer participantsLimit;
     @Enumerated(EnumType.STRING)
     private Format format = Format.STATIONARY;
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany
     private List<File> photos;
     private boolean verified;
     @ManyToMany(cascade = CascadeType.REMOVE)
