@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.OrganizerSingleBecomeRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.OrganizerRequestSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
 
@@ -32,6 +33,16 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserSingleResponse> me() {
         return ResponseEntity.ok(userService.getCurrentUserResponse());
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Get all users (Admin, Organizer)")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
+    public ResponseEntity<List<UserShortResponse>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @PostMapping("/update-profile")

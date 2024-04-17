@@ -20,11 +20,14 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapperImpl;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,5 +119,17 @@ public class UserServiceTest {
                 ResponseStatusException.class,
                 () -> userService.banUser(1L)
         );
+    }
+
+    @Test
+    public void shouldGetAllUsers() {
+        var response = new UserShortResponse();
+        response.setId(1L);
+        response.setEmail("cinek@gmail.com");
+        response.setPhoto("photo");
+
+        when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
+
+        assertEquals(new ArrayList<>(List.of(response)), userService.getAll());
     }
 }

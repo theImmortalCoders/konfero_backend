@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
+import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +24,7 @@ public class UserService {
     private final UserUtil userUtil;
     private final UserMapper userMapper;
     private final OrganizerRequestService organizerRequestService;
+    private final UserRepository userRepository;
 
     UserSingleResponse getCurrentUserResponse() {
         return userMapper.map(userUtil.getCurrentUser());
@@ -56,6 +61,13 @@ public class UserService {
         user.setActive(false);
 
         userUtil.saveUser(user);
+    }
+
+    List<UserShortResponse> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::shortMap)
+                .toList();
     }
 
     //
