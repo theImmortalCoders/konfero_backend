@@ -124,10 +124,10 @@ public class FileService {
 
     private void updateFileType(File file) {
         String extension = getFileExtension(file.getPath());
-        List<String> documents = List.of("pdf", "docx", "doc", "odt");
-        List<String> images = List.of("jpg", "jpeg", "png");
-        List<String> videos = List.of("mp4", "mpeg-4", "mov");
-        List<String> sounds = List.of("mp3", "wav");
+        List<String> documents = List.of("pdf", "docx", "doc", "odt", "PDF", "DOCX", "DOC", "ODT");
+        List<String> images = List.of("jpg", "jpeg", "png", "JPG", "JPEG", "PNG");
+        List<String> videos = List.of("mp4", "mpeg-4", "mov", "MP4", "MPEG-4", "MOV");
+        List<String> sounds = List.of("mp3", "wav", "MP3", "WAV");
 
         if (documents.contains(extension)) file.setFileType(File.FileType.DOCUMENT);
         if (images.contains(extension)) file.setFileType(File.FileType.IMAGE);
