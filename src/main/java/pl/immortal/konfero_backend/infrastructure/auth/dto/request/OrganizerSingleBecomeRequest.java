@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class OrganizerSingleBecomeRequest {
-    private String companyName;
-    private String address;
-    private String city;
-    private String phone;
+	private String companyName;
+	private String address;
+	private String city;
+	private String phone;
 }

@@ -18,52 +18,52 @@ import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 @Service
 @AllArgsConstructor
 public class ConferenceGetUseCase {
-    private final ConferenceUtil conferenceUtil;
-    private final ConferenceMapper conferenceMapper;
-    private final ConferenceRepository conferenceRepository;
-    private final UserUtil userUtil;
+	private final ConferenceUtil conferenceUtil;
+	private final ConferenceMapper conferenceMapper;
+	private final ConferenceRepository conferenceRepository;
+	private final UserUtil userUtil;
 
-    public ConferenceSingleResponse getDetails(Long conferenceId) {
-        User user = userUtil.getCurrentUserOrNull();
+	public ConferenceSingleResponse getDetails(Long conferenceId) {
+		User user = userUtil.getCurrentUserOrNull();
 
-        if (user == null || user.getRole().equals(Role.USER)) {
-            Conference conference = conferenceUtil.getById(conferenceId);
-            updateFullStatus(conference);
-            return conferenceMapper.guestMap(conference);
-        }
+		if (user == null || user.getRole().equals(Role.USER)) {
+			Conference conference = conferenceUtil.getById(conferenceId);
+			updateFullStatus(conference);
+			return conferenceMapper.guestMap(conference);
+		}
 
-        Conference conference = conferenceUtil.getByIdWithAuthorLecturerOrParticipantCheck(user, conferenceId);
-        updateFullStatus(conference);
-        return conferenceMapper.map(conference);
-    }
+		Conference conference = conferenceUtil.getByIdWithAuthorLecturerOrParticipantCheck(user, conferenceId);
+		updateFullStatus(conference);
+		return conferenceMapper.map(conference);
+	}
 
-    public Page<ConferenceShortResponse> getAll(PageRequest pageRequest, ConferenceSearchFields searchFields) {
-        Page<Conference> conferences = conferenceRepository.findAllWithFilters(
-                searchFields.getName(),
-                searchFields.getCanceled(),
-                searchFields.getParticipantsLimit(),
-                searchFields.getVerified(),
-                searchFields.getParticipantsFull(),
-                searchFields.getStartDateTimeFrom(),
-                searchFields.getStartDateTimeTo(),
-                searchFields.getTagsIds(),
-                pageRequest
-        );
+	public Page<ConferenceShortResponse> getAll(PageRequest pageRequest, ConferenceSearchFields searchFields) {
+		Page<Conference> conferences = conferenceRepository.findAllWithFilters(
+				searchFields.getName(),
+				searchFields.getCanceled(),
+				searchFields.getParticipantsLimit(),
+				searchFields.getVerified(),
+				searchFields.getParticipantsFull(),
+				searchFields.getStartDateTimeFrom(),
+				searchFields.getStartDateTimeTo(),
+				searchFields.getTagsIds(),
+				pageRequest
+		);
 
-        return new PageImpl<>(
-                conferences
-                        .stream()
-                        .peek(ConferenceGetUseCase::updateFullStatus)
-                        .map(conferenceMapper::shortMap)
-                        .toList(), pageRequest, conferenceRepository.count()
-        );
-    }
+		return new PageImpl<>(
+				conferences
+						.stream()
+						.peek(ConferenceGetUseCase::updateFullStatus)
+						.map(conferenceMapper::shortMap)
+						.toList(), pageRequest, conferenceRepository.count()
+		);
+	}
 
-    //
+	//
 
-    private static void updateFullStatus(Conference conference) {
-        if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
-            conference.setParticipantsFull(true);
-        }
-    }
+	private static void updateFullStatus(Conference conference) {
+		if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
+			conference.setParticipantsFull(true);
+		}
+	}
 }

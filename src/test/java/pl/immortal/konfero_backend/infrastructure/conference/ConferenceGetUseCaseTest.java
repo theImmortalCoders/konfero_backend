@@ -25,38 +25,38 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class ConferenceGetUseCaseTest {
-    private Conference conference;
-    private ConferenceSingleResponse conferenceSingleResponse;
-    private User user;
-    @Mock
-    private ConferenceUtil conferenceUtil;
-    @Spy
-    private ConferenceMapper conferenceMapper = new ConferenceMapperImpl();
-    @Mock
-    private UserUtil userUtil;
-    @InjectMocks
-    private ConferenceGetUseCase conferenceGetUseCase;
+	private Conference conference;
+	private ConferenceSingleResponse conferenceSingleResponse;
+	private User user;
+	@Mock
+	private ConferenceUtil conferenceUtil;
+	@Spy
+	private ConferenceMapper conferenceMapper = new ConferenceMapperImpl();
+	@Mock
+	private UserUtil userUtil;
+	@InjectMocks
+	private ConferenceGetUseCase conferenceGetUseCase;
 
-    @BeforeEach
-    public void setUp() {
-        conference = new Conference();
-        conference.setId(1L);
-        user = new User();
-        user.setId(1L);
+	@BeforeEach
+	public void setUp() {
+		conference = new Conference();
+		conference.setId(1L);
+		user = new User();
+		user.setId(1L);
 
-        conferenceSingleResponse = new ConferenceSingleResponse();
-        conferenceSingleResponse.setId(1L);
-        conferenceSingleResponse.setTags(new ArrayList<>());
-        conferenceSingleResponse.setParticipantsFull(false);
-        conferenceSingleResponse.setLectures(new ArrayList<>());
-        conferenceSingleResponse.setFormat(Conference.Format.STATIONARY);
+		conferenceSingleResponse = new ConferenceSingleResponse();
+		conferenceSingleResponse.setId(1L);
+		conferenceSingleResponse.setTags(new ArrayList<>());
+		conferenceSingleResponse.setParticipantsFull(false);
+		conferenceSingleResponse.setLectures(new ArrayList<>());
+		conferenceSingleResponse.setFormat(Conference.Format.STATIONARY);
 
-        when(conferenceUtil.getById(any(Long.class))).thenReturn(conference);
-        when(userUtil.getCurrentUser()).thenReturn(user);
-    }
+		when(conferenceUtil.getById(any(Long.class))).thenReturn(conference);
+		when(userUtil.getCurrentUser()).thenReturn(user);
+	}
 
-    @Test
-    public void shouldGetConference() {
-        assertEquals(conferenceSingleResponse, conferenceGetUseCase.getDetails(1L));
-    }
+	@Test
+	public void shouldGetConference() {
+		assertEquals(conferenceSingleResponse, conferenceGetUseCase.getDetails(1L));
+	}
 }

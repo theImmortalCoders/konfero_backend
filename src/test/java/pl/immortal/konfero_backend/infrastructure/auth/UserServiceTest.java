@@ -39,97 +39,97 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class UserServiceTest {
-    private User user;
-    @Mock
-    private HttpServletRequest request;
-    @Mock
-    private HttpServletResponse response;
-    @Mock
-    private SecurityContextHolderStrategy securityContextHolderStrategy;
-    @Mock
-    private SecurityContextRepository securityContextRepository;
-    @Mock
-    private Authentication authentication;
-    @Mock
-    private SecurityContext securityContext;
-    @Spy
-    private UserMapper userMapper = new UserMapperImpl();
-    private final MailTemplateService mailTemplateService = mock(MailTemplateService.class);
-    private final UserRepository userRepository = mock(UserRepository.class);
-    @Spy
-    private UserUtil userUtil = new UserUtil(userRepository);
-    @InjectMocks
-    private UserService userService;
+	private User user;
+	@Mock
+	private HttpServletRequest request;
+	@Mock
+	private HttpServletResponse response;
+	@Mock
+	private SecurityContextHolderStrategy securityContextHolderStrategy;
+	@Mock
+	private SecurityContextRepository securityContextRepository;
+	@Mock
+	private Authentication authentication;
+	@Mock
+	private SecurityContext securityContext;
+	@Spy
+	private UserMapper userMapper = new UserMapperImpl();
+	private final MailTemplateService mailTemplateService = mock(MailTemplateService.class);
+	private final UserRepository userRepository = mock(UserRepository.class);
+	@Spy
+	private UserUtil userUtil = new UserUtil(userRepository);
+	@InjectMocks
+	private UserService userService;
 
-    @BeforeEach
-    public void setUp() {
-        SecurityContextHolder.setContext(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(securityContext.getAuthentication().getName()).thenReturn("cinek@gmail.com");
-        when(securityContextHolderStrategy.createEmptyContext()).thenReturn(securityContext);
+	@BeforeEach
+	public void setUp() {
+		SecurityContextHolder.setContext(securityContext);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(securityContext.getAuthentication().getName()).thenReturn("cinek@gmail.com");
+		when(securityContextHolderStrategy.createEmptyContext()).thenReturn(securityContext);
 
-        user = new User();
-        user.setId(1L);
-        user.setGoogleId("35346345342");
-        user.setEmail("cinek@gmail.com");
-        user.setPhoto("photo");
+		user = new User();
+		user.setId(1L);
+		user.setGoogleId("35346345342");
+		user.setEmail("cinek@gmail.com");
+		user.setPhoto("photo");
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
-    }
+		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+		when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(user));
+		when(userRepository.save(any(User.class))).thenReturn(user);
+	}
 
-    @Test
-    public void shouldUpdateProfile() {
-        var updateRequest = new ProfileUpdateSingleRequest();
-        updateRequest.setCity("city");
-        updateRequest.setPhone("phone");
+	@Test
+	public void shouldUpdateProfile() {
+		var updateRequest = new ProfileUpdateSingleRequest();
+		updateRequest.setCity("city");
+		updateRequest.setPhone("phone");
 
-        userService.updateProfile(updateRequest);
+		userService.updateProfile(updateRequest);
 
-        assertEquals(updateRequest.getCity(), user.getCity());
-        assertEquals(updateRequest.getPhone(), user.getPhone());
-    }
+		assertEquals(updateRequest.getCity(), user.getCity());
+		assertEquals(updateRequest.getPhone(), user.getPhone());
+	}
 
-    @Test
-    public void shouldUpdateRole() {
-        Role newRole = Role.ADMIN;
+	@Test
+	public void shouldUpdateRole() {
+		Role newRole = Role.ADMIN;
 
-        userService.updateRole(newRole, 1L, request, response);
+		userService.updateRole(newRole, 1L, request, response);
 
-        assertEquals(Role.ADMIN, user.getRole());
-    }
+		assertEquals(Role.ADMIN, user.getRole());
+	}
 
-    @Test
-    public void shouldBanUser() {
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setEmail("user2@mail.com");
+	@Test
+	public void shouldBanUser() {
+		User user2 = new User();
+		user2.setId(2L);
+		user2.setEmail("user2@mail.com");
 
-        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+		when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
 
-        userService.banUser(2L);
+		userService.banUser(2L);
 
-        assertFalse(user2.isActive());
-    }
+		assertFalse(user2.isActive());
+	}
 
-    @Test
-    public void shouldThrowBadRequestWhenBanUser() {
-        assertThrows(
-                ResponseStatusException.class,
-                () -> userService.banUser(1L)
-        );
-    }
+	@Test
+	public void shouldThrowBadRequestWhenBanUser() {
+		assertThrows(
+				ResponseStatusException.class,
+				() -> userService.banUser(1L)
+		);
+	}
 
-    @Test
-    public void shouldGetAllUsers() {
-        var response = new UserShortResponse();
-        response.setId(1L);
-        response.setEmail("cinek@gmail.com");
-        response.setPhoto("photo");
+	@Test
+	public void shouldGetAllUsers() {
+		var response = new UserShortResponse();
+		response.setId(1L);
+		response.setEmail("cinek@gmail.com");
+		response.setPhoto("photo");
 
-        when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
+		when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
 
-        assertEquals(new ArrayList<>(List.of(response)), userService.getAll());
-    }
+		assertEquals(new ArrayList<>(List.of(response)), userService.getAll());
+	}
 }

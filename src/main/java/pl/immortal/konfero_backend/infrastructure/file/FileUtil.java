@@ -13,23 +13,23 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class FileUtil {
-    private final FileRepository fileRepository;
+	private final FileRepository fileRepository;
 
-    public File getFileById(Long imageId) {
-        return Option.ofOptional(fileRepository.findById(imageId))
-                .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
-    }
+	public File getFileById(Long imageId) {
+		return Option.ofOptional(fileRepository.findById(imageId))
+				.getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
+	}
 
-    public File getImageById(Long imageId) {
-        return Option.ofOptional(fileRepository.findById(imageId))
-                .filter(f -> f.getFileType() != null && f.getFileType().equals(File.FileType.IMAGE))
-                .getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
-    }
+	public File getImageById(Long imageId) {
+		return Option.ofOptional(fileRepository.findById(imageId))
+				.filter(f -> f.getFileType() != null && f.getFileType().equals(File.FileType.IMAGE))
+				.getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Image " + imageId + " not found."));
+	}
 
-    public List<File> getImagesByIds(List<Long> ids) {
-        return fileRepository.findAllById(ids)
-                .stream()
-                .filter(f -> f.getFileType().equals(File.FileType.IMAGE))
-                .toList();
-    }
+	public List<File> getImagesByIds(List<Long> ids) {
+		return fileRepository.findAllById(ids)
+				.stream()
+				.filter(f -> f.getFileType().equals(File.FileType.IMAGE))
+				.toList();
+	}
 }

@@ -13,8 +13,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @OpenAPIDefinition(info = @Info(title = "Konfero backend app documentation", description = "Author: Marcin Bator"))
 public class KonferoBackendApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(KonferoBackendApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(KonferoBackendApplication.class, args);
+	}
 
 }

@@ -9,9 +9,9 @@ import pl.immortal.konfero_backend.model.entity.User;
 
 @Mapper
 public interface UserMapper {
-    UserSingleResponse map(User request);
+	UserSingleResponse map(User request);
 
-    UserShortResponse shortMap(User request);
+	UserShortResponse shortMap(User request);
 
-    OrganizerRequestSingleResponse map(OrganizerRequest request);
+	OrganizerRequestSingleResponse map(OrganizerRequest request);
 }

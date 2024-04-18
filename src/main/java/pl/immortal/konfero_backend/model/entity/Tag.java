@@ -6,9 +6,9 @@ import lombok.Data;
 @Entity
 @Data
 public class Tag {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @Enumerated(EnumType.STRING)
-    private Conference.TagName tagName;
+	@Id
+	@GeneratedValue
+	private Long id;
+	@Enumerated(EnumType.STRING)
+	private Conference.TagName tagName;
 }

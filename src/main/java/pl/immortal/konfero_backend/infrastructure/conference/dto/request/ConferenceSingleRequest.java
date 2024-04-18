@@ -11,16 +11,16 @@ import java.util.List;
 
 @Data
 public class ConferenceSingleRequest {
-    private LocalDateTime startDateTime;
-    @Size(min = 3, max = 40)
-    private String name;
-    @Size(min = 10, max = 300)
-    private String description;
-    private Long logoId;
-    private List<Long> tagsIds;
-    private Location location;
-    private Integer participantsLimit;
-    @NotNull
-    private Conference.Format format;
-    private List<Long> photosIds;
+	private LocalDateTime startDateTime;
+	@Size(min = 3, max = 40)
+	private String name;
+	@Size(min = 10, max = 300)
+	private String description;
+	private Long logoId;
+	private List<Long> tagsIds;
+	private Location location;
+	private Integer participantsLimit;
+	@NotNull
+	private Conference.Format format;
+	private List<Long> photosIds;
 }

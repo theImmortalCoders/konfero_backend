@@ -14,23 +14,23 @@ import java.util.List;
 
 @Data
 public class ConferenceSingleResponse {
-    private Long id;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
-    private UserShortResponse organizer;
-    private String name;
-    private String description;
-    private FileSingleResponse logo;
-    private List<Tag> tags;
-    private Location location;
-    private List<UserShortResponse> participants;
-    private List<LectureShortResponse> lectures;
-    private boolean finished;
-    private boolean canceled;
-    private int participantsLimit;
-    private Conference.Format format;
-    private List<FileSingleResponse> photos;
-    private boolean verified;
-    private List<CommentSingleResponse> comments;
-    private boolean participantsFull;
+	private Long id;
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
+	private UserShortResponse organizer;
+	private String name;
+	private String description;
+	private FileSingleResponse logo;
+	private List<Tag> tags;
+	private Location location;
+	private List<UserShortResponse> participants;
+	private List<LectureShortResponse> lectures;
+	private boolean finished;
+	private boolean canceled;
+	private int participantsLimit;
+	private Conference.Format format;
+	private List<FileSingleResponse> photos;
+	private boolean verified;
+	private List<CommentSingleResponse> comments;
+	private boolean participantsFull;
 }

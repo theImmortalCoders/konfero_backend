@@ -14,46 +14,46 @@ import java.util.List;
 @Entity
 @Data
 public class Conference {
-    @Id
-    @GeneratedValue
-    private Long id;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "organizer_id")
-    private User organizer;
-    private String name;
-    private String description;
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private File logo;
-    @ManyToMany
-    private List<Tag> tags = new ArrayList<>();
-    @Type(JsonBinaryType.class)
-    @Column(columnDefinition = "jsonb")
-    private Location location;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<User> participants = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @ToString.Exclude
-    private List<Lecture> lectures = new ArrayList<>();
-    private boolean canceled;
-    private Integer participantsLimit;
-    @Enumerated(EnumType.STRING)
-    private Format format = Format.STATIONARY;
-    @ManyToMany
-    private List<File> photos;
-    private boolean verified;
-    @ManyToMany(cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
-    private boolean participantsFull;
+	@Id
+	@GeneratedValue
+	private Long id;
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "organizer_id")
+	private User organizer;
+	private String name;
+	private String description;
+	@ManyToOne
+	@JoinColumn(name = "image_id")
+	private File logo;
+	@ManyToMany
+	private List<Tag> tags = new ArrayList<>();
+	@Type(JsonBinaryType.class)
+	@Column(columnDefinition = "jsonb")
+	private Location location;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@ToString.Exclude
+	private List<User> participants = new ArrayList<>();
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ToString.Exclude
+	private List<Lecture> lectures = new ArrayList<>();
+	private boolean canceled;
+	private Integer participantsLimit;
+	@Enumerated(EnumType.STRING)
+	private Format format = Format.STATIONARY;
+	@ManyToMany
+	private List<File> photos;
+	private boolean verified;
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	private List<Comment> comments;
+	private boolean participantsFull;
 
-    public enum TagName {
-        IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
-    }
+	public enum TagName {
+		IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
+	}
 
-    public enum Format {
-        STATIONARY, ONLINE
-    }
+	public enum Format {
+		STATIONARY, ONLINE
+	}
 }

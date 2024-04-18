@@ -39,122 +39,122 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LectureServiceTest {
-    private Conference conference;
-    private Lecture lecture;
-    private User user;
-    private File file;
-    private LocalDateTime startTime = LocalDateTime.now();
-    private final LectureRepository lectureRepository = mock(LectureRepository.class);
-    @Spy
-    private LectureUtil lectureUtil = new LectureUtil(lectureRepository);
-    @Spy
-    private LectureMapper lectureMapper = new LectureMapperImpl();
-    private final ConferenceRepository conferenceRepository = mock(ConferenceRepository.class);
-    @Spy
-    private final ConferenceUtil conferenceUtil = new ConferenceUtil(conferenceRepository);
-    @Mock
-    private UserUtil userUtil;
-    @Mock
-    private FileUtil fileUtil;
-    @Mock
-    private MailTemplateService mailTemplateService;
-    @InjectMocks
-    private LectureService lectureService;
+	private Conference conference;
+	private Lecture lecture;
+	private User user;
+	private File file;
+	private LocalDateTime startTime = LocalDateTime.now();
+	private final LectureRepository lectureRepository = mock(LectureRepository.class);
+	@Spy
+	private LectureUtil lectureUtil = new LectureUtil(lectureRepository);
+	@Spy
+	private LectureMapper lectureMapper = new LectureMapperImpl();
+	private final ConferenceRepository conferenceRepository = mock(ConferenceRepository.class);
+	@Spy
+	private final ConferenceUtil conferenceUtil = new ConferenceUtil(conferenceRepository);
+	@Mock
+	private UserUtil userUtil;
+	@Mock
+	private FileUtil fileUtil;
+	@Mock
+	private MailTemplateService mailTemplateService;
+	@InjectMocks
+	private LectureService lectureService;
 
-    @BeforeEach
-    public void setUp() {
-        conference = new Conference();
-        conference.setId(1L);
-        conference.setStartDateTime(startTime.plusDays(1));
-        conference.setOrganizer(user);
-        lecture = new Lecture();
-        lecture.setId(1L);
-        lecture.setConference(conference);
-        user = new User();
-        user.setId(1L);
-        file = new File();
-        file.setId(1L);
+	@BeforeEach
+	public void setUp() {
+		conference = new Conference();
+		conference.setId(1L);
+		conference.setStartDateTime(startTime.plusDays(1));
+		conference.setOrganizer(user);
+		lecture = new Lecture();
+		lecture.setId(1L);
+		lecture.setConference(conference);
+		user = new User();
+		user.setId(1L);
+		file = new File();
+		file.setId(1L);
 
-        when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
-        when(userUtil.getUsersByIds(new ArrayList<>(List.of(1L)))).thenReturn(new ArrayList<>(List.of(user)));
-        when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
-        when(userUtil.getCurrentUser()).thenReturn(user);
-        when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
-        when(lectureRepository.save(any(Lecture.class))).thenReturn(lecture);
-        when(lectureRepository.findById(1L)).thenReturn(Optional.of(lecture));
-    }
+		when(conferenceRepository.findById(1L)).thenReturn(Optional.of(conference));
+		when(userUtil.getUsersByIds(new ArrayList<>(List.of(1L)))).thenReturn(new ArrayList<>(List.of(user)));
+		when(fileUtil.getImageById(any(Long.class))).thenReturn(file);
+		when(userUtil.getCurrentUser()).thenReturn(user);
+		when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);
+		when(lectureRepository.save(any(Lecture.class))).thenReturn(lecture);
+		when(lectureRepository.findById(1L)).thenReturn(Optional.of(lecture));
+	}
 
-    @Test
-    public void shouldAddLecture() {
-        var request = new LectureSingleOrganizerRequest();
-        request.setStartDateTime(startTime.plusDays(1));
-        request.setDurationMinutes(60);
-        request.setLecturersIds(new ArrayList<>(List.of(1L)));
-        conference.setOrganizer(user);
+	@Test
+	public void shouldAddLecture() {
+		var request = new LectureSingleOrganizerRequest();
+		request.setStartDateTime(startTime.plusDays(1));
+		request.setDurationMinutes(60);
+		request.setLecturersIds(new ArrayList<>(List.of(1L)));
+		conference.setOrganizer(user);
 
-        lectureService.add(1L, request);
+		lectureService.add(1L, request);
 
-        assertEquals(conference.getEndDateTime(), conference.getStartDateTime().plusMinutes(60));
-    }
+		assertEquals(conference.getEndDateTime(), conference.getStartDateTime().plusMinutes(60));
+	}
 
-    @Test
-    public void shouldThrowBadRequestWhenAddLecture() {
-        var request = new LectureSingleOrganizerRequest();
-        request.setStartDateTime(startTime.minusDays(1));
-        request.setDurationMinutes(60);
-        request.setLecturersIds(new ArrayList<>(List.of(1L)));
-        conference.setOrganizer(user);
+	@Test
+	public void shouldThrowBadRequestWhenAddLecture() {
+		var request = new LectureSingleOrganizerRequest();
+		request.setStartDateTime(startTime.minusDays(1));
+		request.setDurationMinutes(60);
+		request.setLecturersIds(new ArrayList<>(List.of(1L)));
+		conference.setOrganizer(user);
 
-        assertThrows(
-                ResponseStatusException.class,
-                () -> lectureService.add(1L, request)
-        );
-    }
+		assertThrows(
+				ResponseStatusException.class,
+				() -> lectureService.add(1L, request)
+		);
+	}
 
-    @Test
-    public void shouldUpdateLectureAsOrganizer() {
-        var request = new LectureSingleOrganizerRequest();
-        request.setStartDateTime(startTime.plusDays(1));
-        request.setDurationMinutes(60);
-        request.setLecturersIds(new ArrayList<>(List.of(1L)));
-        conference.setOrganizer(user);
-        conference.getLectures().add(lecture);
+	@Test
+	public void shouldUpdateLectureAsOrganizer() {
+		var request = new LectureSingleOrganizerRequest();
+		request.setStartDateTime(startTime.plusDays(1));
+		request.setDurationMinutes(60);
+		request.setLecturersIds(new ArrayList<>(List.of(1L)));
+		conference.setOrganizer(user);
+		conference.getLectures().add(lecture);
 
-        lectureService.updateAsOrganizer(1L, request);
+		lectureService.updateAsOrganizer(1L, request);
 
-        assertEquals(conference.getEndDateTime(), conference.getStartDateTime().plusMinutes(60));
-    }
+		assertEquals(conference.getEndDateTime(), conference.getStartDateTime().plusMinutes(60));
+	}
 
-    @Test
-    public void shouldUpdateLectureAsLecturer() {
-        var request = new LectureSingleLecturerRequest();
-        conference.setOrganizer(user);
-        conference.getLectures().add(lecture);
+	@Test
+	public void shouldUpdateLectureAsLecturer() {
+		var request = new LectureSingleLecturerRequest();
+		conference.setOrganizer(user);
+		conference.getLectures().add(lecture);
 
-        lectureService.updateAsLecturer(1L, request);
+		lectureService.updateAsLecturer(1L, request);
 
-        verify(lectureRepository, times(1)).save(any(Lecture.class));
-    }
+		verify(lectureRepository, times(1)).save(any(Lecture.class));
+	}
 
-    @Test
-    public void shouldDeleteLecture() {
-        conference.setOrganizer(user);
-        conference.getLectures().add(lecture);
+	@Test
+	public void shouldDeleteLecture() {
+		conference.setOrganizer(user);
+		conference.getLectures().add(lecture);
 
-        lectureService.delete(1L);
+		lectureService.delete(1L);
 
-        verify(lectureRepository, times(1)).delete(any(Lecture.class));
-    }
+		verify(lectureRepository, times(1)).delete(any(Lecture.class));
+	}
 
-    @Test
-    public void shouldGetLectureResponse() {
-        var response = new LectureSingleResponse();
-        response.setId(1L);
-        response.setLecturers(new ArrayList<>());
-        response.setMaterials(new ArrayList<>());
-        response.setInterested(new ArrayList<>());
-        response.setConferenceId(1L);
+	@Test
+	public void shouldGetLectureResponse() {
+		var response = new LectureSingleResponse();
+		response.setId(1L);
+		response.setLecturers(new ArrayList<>());
+		response.setMaterials(new ArrayList<>());
+		response.setInterested(new ArrayList<>());
+		response.setConferenceId(1L);
 
-        assertEquals(response, lectureService.getById(1L));
-    }
+		assertEquals(response, lectureService.getById(1L));
+	}
 }

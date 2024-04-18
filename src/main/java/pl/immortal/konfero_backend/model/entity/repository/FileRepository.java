@@ -8,5 +8,5 @@ import pl.immortal.konfero_backend.model.entity.User;
 import java.util.List;
 
 public interface FileRepository extends JpaRepository<File, Long> {
-    List<File> findAllByAuthor(User author);
+	List<File> findAllByAuthor(User author);
 }

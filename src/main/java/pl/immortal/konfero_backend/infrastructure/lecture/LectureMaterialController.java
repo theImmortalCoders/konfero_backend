@@ -12,30 +12,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/lecture-material")
 @AllArgsConstructor
 public class LectureMaterialController {
-    private final LectureMaterialUseCase lectureMaterialUseCase;
+	private final LectureMaterialUseCase lectureMaterialUseCase;
 
-    @PostMapping("/{lectureId}")
-    @Operation(summary = "Add material to lecture (Lecturer)")
-    @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "403", description = "You not own the lecture")
-    @ApiResponse(responseCode = "401")
-    @ApiResponse(responseCode = "400", description = "You are not owner of material")
-    @ApiResponse(responseCode = "404", description = "Lecture not found")
-    @PreAuthorize("isAuthenticated()")
-    public void add(@PathVariable Long lectureId, @RequestParam Long materialId) {
-        lectureMaterialUseCase.add(lectureId, materialId);
-    }
+	@PostMapping("/{lectureId}")
+	@Operation(summary = "Add material to lecture (Lecturer)")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "403", description = "You not own the lecture")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You are not owner of material")
+	@ApiResponse(responseCode = "404", description = "Lecture not found")
+	@PreAuthorize("isAuthenticated()")
+	public void add(@PathVariable Long lectureId, @RequestParam Long materialId) {
+		lectureMaterialUseCase.add(lectureId, materialId);
+	}
 
-    @DeleteMapping("/{lectureId}")
-    @Operation(summary = "Delete material (Lecturer)")
-    @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "403", description = "You not own the lecture")
-    @ApiResponse(responseCode = "401")
-    @ApiResponse(responseCode = "400")
-    @ApiResponse(responseCode = "404", description = "Lecture or material not found")
-    @PreAuthorize("isAuthenticated()")
-    public void remove(@PathVariable Long lectureId, @RequestParam Long materialId) {
-        lectureMaterialUseCase.remove(lectureId, materialId);
-    }
+	@DeleteMapping("/{lectureId}")
+	@Operation(summary = "Delete material (Lecturer)")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "403", description = "You not own the lecture")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400")
+	@ApiResponse(responseCode = "404", description = "Lecture or material not found")
+	@PreAuthorize("isAuthenticated()")
+	public void remove(@PathVariable Long lectureId, @RequestParam Long materialId) {
+		lectureMaterialUseCase.remove(lectureId, materialId);
+	}
 
 }

@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 @Data
 public class LectureShortResponse {
-    private Long id;
-    private String name;
+	private Long id;
+	private String name;
 
-    private LocalDateTime startDateTime;
-    private int durationMinutes;
-    private FileSingleResponse image;
-    private String place;
+	private LocalDateTime startDateTime;
+	private int durationMinutes;
+	private FileSingleResponse image;
+	private String place;
 }

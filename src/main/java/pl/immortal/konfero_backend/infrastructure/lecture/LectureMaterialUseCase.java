@@ -13,36 +13,36 @@ import pl.immortal.konfero_backend.model.entity.User;
 @Component
 @AllArgsConstructor
 public class LectureMaterialUseCase {
-    private final FileUtil fileUtil;
-    private final UserUtil userUtil;
-    private final LectureUtil lectureUtil;
+	private final FileUtil fileUtil;
+	private final UserUtil userUtil;
+	private final LectureUtil lectureUtil;
 
-    public void add(Long lectureId, Long materialId) {
-        User user = userUtil.getCurrentUser();
-        Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
-        File material = fileUtil.getFileById(materialId);
+	public void add(Long lectureId, Long materialId) {
+		User user = userUtil.getCurrentUser();
+		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		File material = fileUtil.getFileById(materialId);
 
-        checkMaterialOwnership(material, user);
+		checkMaterialOwnership(material, user);
 
-        lecture.getMaterials().add(material);
-        lectureUtil.save(lecture);
-    }
+		lecture.getMaterials().add(material);
+		lectureUtil.save(lecture);
+	}
 
-    public void remove(Long lectureId, Long materialId) {
-        User user = userUtil.getCurrentUser();
-        Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
-        File material = fileUtil.getFileById(materialId);
+	public void remove(Long lectureId, Long materialId) {
+		User user = userUtil.getCurrentUser();
+		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		File material = fileUtil.getFileById(materialId);
 
-        lecture.getMaterials().remove(material);
+		lecture.getMaterials().remove(material);
 
-        lectureUtil.save(lecture);
-    }
+		lectureUtil.save(lecture);
+	}
 
-    //
+	//
 
-    private static void checkMaterialOwnership(File material, User user) {
-        if (!material.getAuthor().equals(user)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not owner of the material.");
-        }
-    }
+	private static void checkMaterialOwnership(File material, User user) {
+		if (!material.getAuthor().equals(user)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not owner of the material.");
+		}
+	}
 }

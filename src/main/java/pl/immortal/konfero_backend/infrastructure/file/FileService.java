@@ -30,108 +30,108 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class FileService {
-    private final String path = "/var/lib/postgresql/data";
-    private final FileRepository fileRepository;
-    private final FileMapper fileMapper;
-    private final UserUtil userUtil;
-    private final FileUtil fileUtil;
+	private final String path = "/var/lib/postgresql/data";
+	private final FileRepository fileRepository;
+	private final FileMapper fileMapper;
+	private final UserUtil userUtil;
+	private final FileUtil fileUtil;
 
-    FileSingleResponse uploadFile(@NotNull MultipartFile fileRequest, String description) throws IOException {
-        String uniqueFileName = LocalDateTime.now()
-                .toString()
-                .replaceAll(":", "_") + "_"
-                + fileRequest.getOriginalFilename();
+	FileSingleResponse uploadFile(@NotNull MultipartFile fileRequest, String description) throws IOException {
+		String uniqueFileName = LocalDateTime.now()
+				.toString()
+				.replaceAll(":", "_") + "_"
+				+ fileRequest.getOriginalFilename();
 
-        Path uploadPath = Paths.get(path);
-        Path filePath = uploadPath.resolve(uniqueFileName);
+		Path uploadPath = Paths.get(path);
+		Path filePath = uploadPath.resolve(uniqueFileName);
 
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+		if (!Files.exists(uploadPath)) {
+			Files.createDirectories(uploadPath);
+		}
 
-        Files.copy(fileRequest.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		Files.copy(fileRequest.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        File file = new File();
-        file.setAuthor(userUtil.getCurrentUser());
-        file.setPath(uniqueFileName);
-        file.setDescription(description);
-        updateFileType(file);
+		File file = new File();
+		file.setAuthor(userUtil.getCurrentUser());
+		file.setPath(uniqueFileName);
+		file.setDescription(description);
+		updateFileType(file);
 
-        return fileMapper.map(saveFileDb(file));
-    }
+		return fileMapper.map(saveFileDb(file));
+	}
 
-    public Resource getFile(Long fileId) throws FileNotFoundException, MalformedURLException {
-        String fileName = fileUtil.getFileById(fileId).getPath();
+	public Resource getFile(Long fileId) throws FileNotFoundException, MalformedURLException {
+		String fileName = fileUtil.getFileById(fileId).getPath();
 
-        Path filePath = Paths.get(path).resolve(fileName);
-        Resource resource = new UrlResource(filePath.toUri());
+		Path filePath = Paths.get(path).resolve(fileName);
+		Resource resource = new UrlResource(filePath.toUri());
 
-        if (resource.exists() || resource.isReadable()) {
-            return resource;
-        } else {
-            throw new FileNotFoundException("File not found: " + fileId);
-        }
-    }
+		if (resource.exists() || resource.isReadable()) {
+			return resource;
+		} else {
+			throw new FileNotFoundException("File not found: " + fileId);
+		}
+	}
 
-    byte[] downloadImage(Long imageId) {
-        String imageName = fileUtil.getFileById(imageId).getPath();
-        Path imagePath = Paths.get(path, imageName);
+	byte[] downloadImage(Long imageId) {
+		String imageName = fileUtil.getFileById(imageId).getPath();
+		Path imagePath = Paths.get(path, imageName);
 
-        try {
-            return Files.readAllBytes(imagePath);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image '" + imageName + "' not found");
-        }
-    }
+		try {
+			return Files.readAllBytes(imagePath);
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image '" + imageName + "' not found");
+		}
+	}
 
-    String getFileExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
-    }
+	String getFileExtension(String fileName) {
+		return fileName.substring(fileName.lastIndexOf(".") + 1);
+	}
 
-    List<FileSingleResponse> getFilesByUser(Long authorId) {
-        User user = userUtil.getUserById(authorId);
-        return fileRepository.findAllByAuthor(user)
-                .stream()
-                .map(fileMapper::map)
-                .toList();
-    }
+	List<FileSingleResponse> getFilesByUser(Long authorId) {
+		User user = userUtil.getUserById(authorId);
+		return fileRepository.findAllByAuthor(user)
+				.stream()
+				.map(fileMapper::map)
+				.toList();
+	}
 
-    void deleteFile(Long imageId) {
-        User user = userUtil.getCurrentUser();
-        File file = fileUtil.getFileById(imageId);
+	void deleteFile(Long imageId) {
+		User user = userUtil.getCurrentUser();
+		File file = fileUtil.getFileById(imageId);
 
-        if (!user.getId().equals(file.getAuthor().getId()) && !user.getRole().equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete image you not own");
-        }
+		if (!user.getId().equals(file.getAuthor().getId()) && !user.getRole().equals(Role.ADMIN)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete image you not own");
+		}
 
-        Path imagePath = Paths.get(path, file.getPath());
-        try {
-            Files.delete(imagePath);
-            fileRepository.delete(file);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image '" + imageId + "' not found");
-        }
-    }
+		Path imagePath = Paths.get(path, file.getPath());
+		try {
+			Files.delete(imagePath);
+			fileRepository.delete(file);
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image '" + imageId + "' not found");
+		}
+	}
 
-    //
+	//
 
-    private File saveFileDb(File file) {
-        return Option.of(fileRepository.save(file))
-                .getOrElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, file.toString())
-                );
-    }
+	private File saveFileDb(File file) {
+		return Option.of(fileRepository.save(file))
+				.getOrElseThrow(
+						() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, file.toString())
+				);
+	}
 
-    private void updateFileType(File file) {
-        String extension = getFileExtension(file.getPath());
-        List<String> documents = List.of("pdf", "docx", "doc", "odt", "PDF", "DOCX", "DOC", "ODT");
-        List<String> images = List.of("jpg", "jpeg", "png", "JPG", "JPEG", "PNG");
-        List<String> videos = List.of("mp4", "mpeg-4", "mov", "MP4", "MPEG-4", "MOV");
-        List<String> sounds = List.of("mp3", "wav", "MP3", "WAV");
+	private void updateFileType(File file) {
+		String extension = getFileExtension(file.getPath());
+		List<String> documents = List.of("pdf", "docx", "doc", "odt", "PDF", "DOCX", "DOC", "ODT");
+		List<String> images = List.of("jpg", "jpeg", "png", "JPG", "JPEG", "PNG");
+		List<String> videos = List.of("mp4", "mpeg-4", "mov", "MP4", "MPEG-4", "MOV");
+		List<String> sounds = List.of("mp3", "wav", "MP3", "WAV");
 
-        if (documents.contains(extension)) file.setFileType(File.FileType.DOCUMENT);
-        if (images.contains(extension)) file.setFileType(File.FileType.IMAGE);
-        if (videos.contains(extension)) file.setFileType(File.FileType.VIDEO);
-        if (sounds.contains(extension)) file.setFileType(File.FileType.SOUND);
-    }
+		if (documents.contains(extension)) file.setFileType(File.FileType.DOCUMENT);
+		if (images.contains(extension)) file.setFileType(File.FileType.IMAGE);
+		if (videos.contains(extension)) file.setFileType(File.FileType.VIDEO);
+		if (sounds.contains(extension)) file.setFileType(File.FileType.SOUND);
+	}
 }

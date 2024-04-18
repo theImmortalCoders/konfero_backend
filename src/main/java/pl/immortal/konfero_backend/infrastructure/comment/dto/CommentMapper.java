@@ -5,5 +5,5 @@ import pl.immortal.konfero_backend.model.entity.Comment;
 
 @Mapper
 public interface CommentMapper {
-    CommentSingleResponse map(Comment request);
+	CommentSingleResponse map(Comment request);
 }

@@ -6,16 +6,16 @@ import lombok.Data;
 @Entity
 @Data
 public class OrganizerRequest {
-    @Id
-    @GeneratedValue
-    private Long id;
-    @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "author_id")
-    private User user;
-    @Enumerated(EnumType.STRING)
-    private OrganizerRequestStatus status = OrganizerRequestStatus.PENDING;
+	@Id
+	@GeneratedValue
+	private Long id;
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "author_id")
+	private User user;
+	@Enumerated(EnumType.STRING)
+	private OrganizerRequestStatus status = OrganizerRequestStatus.PENDING;
 
-    public enum OrganizerRequestStatus {
-        PENDING, APPROVED, DECLINED
-    }
+	public enum OrganizerRequestStatus {
+		PENDING, APPROVED, DECLINED
+	}
 }

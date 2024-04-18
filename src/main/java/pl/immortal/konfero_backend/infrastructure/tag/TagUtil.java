@@ -12,16 +12,16 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class TagUtil {
-    private final TagRepository tagRepository;
+	private final TagRepository tagRepository;
 
-    public Tag getById(Long tagId) {
-        return tagRepository.findById(tagId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")
-                );
-    }
+	public Tag getById(Long tagId) {
+		return tagRepository.findById(tagId)
+				.orElseThrow(
+						() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag not found")
+				);
+	}
 
-    public List<Tag> getAllByIds(List<Long> tagsIds) {
-        return tagRepository.findAllById(tagsIds);
-    }
+	public List<Tag> getAllByIds(List<Long> tagsIds) {
+		return tagRepository.findAllById(tagsIds);
+	}
 }

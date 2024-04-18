@@ -8,9 +8,9 @@ import java.util.List;
 
 @Data
 public class CommentSingleResponse {
-    private Long id;
-    private String content;
-    private LocalDateTime createdAt;
-    private UserShortResponse author;
-    private List<CommentSingleResponse> responses;
+	private Long id;
+	private String content;
+	private LocalDateTime createdAt;
+	private UserShortResponse author;
+	private List<CommentSingleResponse> responses;
 }

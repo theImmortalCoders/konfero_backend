@@ -10,13 +10,13 @@ import java.util.List;
 @Entity
 @Data
 public class Comment {
-    @Id
-    @GeneratedValue
-    private Long id;
-    private String content;
-    private LocalDateTime createdAt;
-    @ManyToOne
-    private User author;
-    @ManyToMany
-    private List<Comment> responses = new ArrayList<>();
+	@Id
+	@GeneratedValue
+	private Long id;
+	private String content;
+	private LocalDateTime createdAt;
+	@ManyToOne
+	private User author;
+	@ManyToMany
+	private List<Comment> responses = new ArrayList<>();
 }

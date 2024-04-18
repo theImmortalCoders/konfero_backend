@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class LectureSingleLecturerRequest {
-    @Size(min = 10, max = 200)
-    private String description;
-    private Long imageId;
+	@Size(min = 10, max = 200)
+	private String description;
+	private Long imageId;
 }

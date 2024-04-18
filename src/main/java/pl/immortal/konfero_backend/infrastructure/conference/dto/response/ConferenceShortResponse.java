@@ -10,17 +10,17 @@ import java.time.LocalDateTime;
 
 @Data
 public class ConferenceShortResponse {
-    private Long id;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
-    private UserShortResponse organizer;
-    private String name;
-    private FileSingleResponse logo;
-    private Location location;
-    private boolean finished;
-    private boolean canceled;
-    private int participantsLimit;
-    private Conference.Format format;
-    private boolean verified;
-    private boolean participantsFull;
+	private Long id;
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
+	private UserShortResponse organizer;
+	private String name;
+	private FileSingleResponse logo;
+	private Location location;
+	private boolean finished;
+	private boolean canceled;
+	private int participantsLimit;
+	private Conference.Format format;
+	private boolean verified;
+	private boolean participantsFull;
 }
