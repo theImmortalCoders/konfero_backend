@@ -47,6 +47,7 @@ public class ConferenceGetUseCase {
 				searchFields.getStartDateTimeFrom(),
 				searchFields.getStartDateTimeTo(),
 				searchFields.getTagsIds(),
+				searchFields.getOrganizerId(),
 				pageRequest
 		);
 

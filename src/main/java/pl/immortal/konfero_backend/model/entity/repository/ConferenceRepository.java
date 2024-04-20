@@ -20,7 +20,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			"AND (cast (?6 as localdatetime ) IS NULL OR c.startDateTime >= ?6) " +
 			"AND (cast (?7 as localdatetime) IS NULL OR c.endDateTime <= ?7) " +
 			"AND (?8 IS NULL OR EXISTS (" +
-			"   SELECT 1 FROM c.tags t WHERE t.id IN ?8))")
+			"   SELECT 1 FROM c.tags t WHERE t.id IN ?8))" +
+			"AND (?9 IS NULL OR c.organizer.id = ?9)")
 	Page<Conference> findAllWithFilters(
 			@Param("name") String name,
 			@Param("canceled") Boolean canceled,
@@ -30,6 +31,7 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			@Param("startDateTimeFrom") LocalDateTime startDateTimeFrom,
 			@Param("startDateTimeTo") LocalDateTime startDateTimeTo,
 			@Param("tags") List<Long> tagsIds,
+			@Param("organizerId") Long organizerId,
 			Pageable pageable
 	);
 

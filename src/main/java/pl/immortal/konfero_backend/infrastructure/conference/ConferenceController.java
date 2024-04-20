@@ -96,7 +96,8 @@ public class ConferenceController {
 			@RequestParam(required = false) Boolean canceled,
 			@RequestParam(required = false) Integer participantsLimit,
 			@RequestParam(required = false) Boolean verified,
-			@RequestParam(required = false) Boolean participantsFull
+			@RequestParam(required = false) Boolean participantsFull,
+			@RequestParam(required = false) Long organizerId
 	) {
 		var pageRequest = PageRequest.of(page, size, sortDirection, sort);
 		var searchFields = new ConferenceSearchFields(
@@ -107,7 +108,8 @@ public class ConferenceController {
 				canceled,
 				participantsLimit,
 				verified,
-				participantsFull
+				participantsFull,
+				organizerId
 		);
 
 		return ResponseEntity.ok(conferenceGetUseCase.getAll(pageRequest, searchFields));
