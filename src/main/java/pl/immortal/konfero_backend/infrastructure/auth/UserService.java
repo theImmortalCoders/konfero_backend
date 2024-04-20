@@ -10,59 +10,71 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.User;
+import pl.immortal.konfero_backend.model.entity.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserService {
-    private final UserUtil userUtil;
-    private final UserMapper userMapper;
-    private final OrganizerRequestService organizerRequestService;
+	private final UserUtil userUtil;
+	private final UserMapper userMapper;
+	private final OrganizerRequestService organizerRequestService;
+	private final UserRepository userRepository;
 
-    UserSingleResponse getCurrentUserResponse() {
-        return userMapper.map(userUtil.getCurrentUser());
-    }
+	UserSingleResponse getCurrentUserResponse() {
+		return userMapper.map(userUtil.getCurrentUser());
+	}
 
-    void updateProfile(ProfileUpdateSingleRequest request) {
-        User user = userUtil.getCurrentUser();
+	void updateProfile(ProfileUpdateSingleRequest request) {
+		User user = userUtil.getCurrentUser();
 
-        user.setPhone(request.getPhone());
-        user.setCity(request.getCity());
+		user.setPhone(request.getPhone());
+		user.setCity(request.getCity());
 
-        userUtil.saveUser(user);
-    }
+		userUtil.saveUser(user);
+	}
 
-    void updateRole(Role newRole, Long userId, HttpServletRequest request, HttpServletResponse response) {
-        User user = userUtil.getUserById(userId);
+	void updateRole(Role newRole, Long userId, HttpServletRequest request, HttpServletResponse response) {
+		User user = userUtil.getUserById(userId);
 
-        user.setRole(newRole);
+		user.setRole(newRole);
 
-        userUtil.saveUser(user);
+		userUtil.saveUser(user);
 
-        if (userId.equals(userUtil.getCurrentUser().getId())) {
-            logoutUser(request, response);
-        }
-    }
+		if (userId.equals(userUtil.getCurrentUser().getId())) {
+			logoutUser(request, response);
+		}
+	}
 
-    void banUser(Long userId) {
-        User user = userUtil.getUserById(userId);
+	void banUser(Long userId) {
+		User user = userUtil.getUserById(userId);
 
-        if (user.getId().equals(userUtil.getCurrentUser().getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot ban yourself");
-        }
+		if (user.getId().equals(userUtil.getCurrentUser().getId())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot ban yourself");
+		}
 
-        user.setActive(false);
+		user.setActive(false);
 
-        userUtil.saveUser(user);
-    }
+		userUtil.saveUser(user);
+	}
 
-    //
+	List<UserShortResponse> getAll() {
+		return userRepository.findAll()
+				.stream()
+				.map(userMapper::shortMap)
+				.toList();
+	}
 
-    private static void logoutUser(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        SecurityContextHolder.getContext().setAuthentication(null);
-    }
+	//
+
+	private static void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+		SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+		logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+		SecurityContextHolder.getContext().setAuthentication(null);
+	}
 }

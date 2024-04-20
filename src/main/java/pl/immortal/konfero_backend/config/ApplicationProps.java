@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @ConfigurationProperties(prefix = "konfero.security")
 public class ApplicationProps {
-    private List<String> allowedOrigins;
-    private String loginUri;
-    private String redirectUri;
-    private String logoutUri;
+	private List<String> allowedOrigins;
+	private String loginUri;
+	private String redirectUri;
+	private String logoutUri;
 }

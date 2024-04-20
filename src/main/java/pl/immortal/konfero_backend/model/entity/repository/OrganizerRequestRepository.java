@@ -6,5 +6,5 @@ import pl.immortal.konfero_backend.model.entity.OrganizerRequest;
 import java.util.List;
 
 public interface OrganizerRequestRepository extends JpaRepository<OrganizerRequest, Long> {
-    List<OrganizerRequest> findAllByStatus(OrganizerRequest.OrganizerRequestStatus status);
+	List<OrganizerRequest> findAllByStatus(OrganizerRequest.OrganizerRequestStatus status);
 }

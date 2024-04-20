@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ProfileUpdateSingleRequest {
-    private String phone;
-    private String city;
+	private String phone;
+	private String city;
 }
