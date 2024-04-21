@@ -20,10 +20,20 @@ public class LectureUtil {
 				.getOrElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecture not found"));
 	}
 
-	public Lecture getByIdWithAuthorityCheck(Long lectureId, User user) {
+	public Lecture getByIdAsOrganizerOrAdminOrLecturer(Long lectureId, User user) {
 		Lecture lecture = getById(lectureId);
 
-		if (!userIsOwner(user, lecture) && !userIsLecturer(user, lecture) && !user.getRole().equals(Role.ADMIN)) {
+		if (userIsNotOwner(user, lecture) && !userIsLecturer(user, lecture) && !user.getRole().equals(Role.ADMIN)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own a conference");
+		}
+
+		return lecture;
+	}
+
+	public Lecture getByIdAsOrganizerOrAdmin(Long lectureId, User user) {
+		Lecture lecture = getById(lectureId);
+
+		if (userIsNotOwner(user, lecture) && !user.getRole().equals(Role.ADMIN)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own a conference");
 		}
 
@@ -35,8 +45,8 @@ public class LectureUtil {
 				.getOrElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, lecture.toString()));
 	}
 
-	private static boolean userIsOwner(User user, Lecture lecture) {
-		return user.getId().equals(lecture.getConference().getOrganizer().getId());
+	private static boolean userIsNotOwner(User user, Lecture lecture) {
+		return !user.getId().equals(lecture.getConference().getOrganizer().getId());
 	}
 
 	private static boolean userIsLecturer(User user, Lecture lecture) {

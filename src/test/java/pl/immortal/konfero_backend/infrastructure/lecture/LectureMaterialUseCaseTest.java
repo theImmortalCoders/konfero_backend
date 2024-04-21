@@ -47,7 +47,7 @@ public class LectureMaterialUseCaseTest {
 		lecture.setLecturers(new ArrayList<>(List.of(user)));
 
 		when(userUtil.getCurrentUser()).thenReturn(user);
-		when(lectureUtil.getByIdWithAuthorityCheck(any(Long.class), any(User.class))).thenReturn(lecture);
+		when(lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(any(Long.class), any(User.class))).thenReturn(lecture);
 		when(fileUtil.getFileById(1L)).thenReturn(file);
 	}
 
