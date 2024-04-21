@@ -49,10 +49,6 @@ public class Conference {
 	private List<Comment> comments;
 	private boolean participantsFull;
 
-	public enum TagName {
-		IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
-	}
-
 	public enum Format {
 		STATIONARY, ONLINE
 	}
