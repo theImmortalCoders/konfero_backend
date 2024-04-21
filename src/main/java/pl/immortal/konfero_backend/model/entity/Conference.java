@@ -45,7 +45,7 @@ public class Conference {
 	@ManyToMany
 	private List<File> photos;
 	private boolean verified;
-	@ManyToMany(cascade = CascadeType.REMOVE)
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conference")
 	private List<Comment> comments;
 	private boolean participantsFull;
 
