@@ -1,6 +1,9 @@
 package pl.immortal.konfero_backend.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
@@ -9,6 +12,6 @@ public class Tag {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@Enumerated(EnumType.STRING)
-	private Conference.TagName tagName;
+	@Column(unique = true)
+	private String tagName;
 }
