@@ -52,7 +52,7 @@ public class LectureService {
 
 
 	void updateAsOrganizer(Long lectureId, LectureSingleOrganizerRequest request) {
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdmin(lectureId, userUtil.getCurrentUser());
 		List<User> lecturers = userUtil.getUsersByIds(request.getLecturersIds());
 		Conference conference = lecture.getConference();
 		conference.getLectures().remove(lecture);
@@ -72,7 +72,7 @@ public class LectureService {
 	}
 
 	void updateAsLecturer(Long lectureId, LectureSingleLecturerRequest request) {
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, userUtil.getCurrentUser());
 		lecture.setDescription(request.getDescription());
 		if (request.getImageId() != null) {
 			lecture.setImage(fileUtil.getImageById(request.getImageId()));
@@ -81,7 +81,7 @@ public class LectureService {
 	}
 
 	void delete(Long lectureId) {
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, userUtil.getCurrentUser());
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, userUtil.getCurrentUser());
 		Conference conference = lecture.getConference();
 
 		conference.getLectures().remove(lecture);

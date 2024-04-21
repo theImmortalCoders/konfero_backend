@@ -19,7 +19,7 @@ public class LectureMaterialUseCase {
 
 	public void add(Long lectureId, Long materialId) {
 		User user = userUtil.getCurrentUser();
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, user);
 		File material = fileUtil.getFileById(materialId);
 
 		checkMaterialOwnership(material, user);
@@ -30,7 +30,7 @@ public class LectureMaterialUseCase {
 
 	public void remove(Long lectureId, Long materialId) {
 		User user = userUtil.getCurrentUser();
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, user);
 		File material = fileUtil.getFileById(materialId);
 
 		lecture.getMaterials().remove(material);

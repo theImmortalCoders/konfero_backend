@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.request.OrganizerSingleBecomeRequest;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.OrganizerRequestSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
@@ -43,16 +42,6 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
 	public ResponseEntity<List<UserShortResponse>> getAll() {
 		return ResponseEntity.ok(userService.getAll());
-	}
-
-	@PostMapping("/update-profile")
-	@Operation(summary = "Update profile with additional data (Auth)")
-	@ApiResponse(responseCode = "200", description = "Successfully retrieved")
-	@ApiResponse(responseCode = "401", description = "Unauthorized")
-	@ApiResponse(responseCode = "404", description = "Bad request")
-	@PreAuthorize("isAuthenticated()")
-	public void updateProfile(@RequestBody ProfileUpdateSingleRequest request) {
-		userService.updateProfile(request);
 	}
 
 	@PostMapping("/become-organizer")
@@ -100,6 +89,17 @@ public class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public void reviewOrganizer(@PathVariable Long requestId, @RequestParam boolean approve) {
 		organizerRequestService.reviewOrganizer(requestId, approve);
+	}
+
+	@PatchMapping("/{userId}/verify")
+	@Operation(summary = "Verify user (Admin)")
+	@ApiResponse(responseCode = "200", description = "Successfully retrieved")
+	@ApiResponse(responseCode = "401", description = "Unauthorized")
+	@ApiResponse(responseCode = "403", description = "Forbidden")
+	@ApiResponse(responseCode = "404", description = "User not found")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public void verify(@PathVariable Long userId) {
+		userService.verify(userId);
 	}
 
 	@GetMapping("/organizer-requests")

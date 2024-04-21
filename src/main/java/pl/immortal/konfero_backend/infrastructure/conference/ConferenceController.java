@@ -28,7 +28,7 @@ public class ConferenceController {
 	private final ConferenceGetUseCase conferenceGetUseCase;
 
 	@PostMapping
-	@Operation(summary = "Add new conference (Organizer)", description = "Organizer role required")
+	@Operation(summary = "Add new conference (Organizer, admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403")
 	@ApiResponse(responseCode = "401")
@@ -39,7 +39,7 @@ public class ConferenceController {
 	}
 
 	@PutMapping("/{conferenceId}")
-	@Operation(summary = "Update info about conference (Organizer)", description = "Organizer role required")
+	@Operation(summary = "Update info about conference (Organizer, admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
 	@ApiResponse(responseCode = "401")
