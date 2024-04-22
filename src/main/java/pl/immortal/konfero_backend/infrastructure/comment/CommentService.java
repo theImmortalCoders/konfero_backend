@@ -18,7 +18,7 @@ public class CommentService {
 	private final UserUtil userUtil;
 
 	void delete(Long commentId) {
-		Comment comment = findByIdWithAuthorOrAdminCheck(commentId, userUtil.getCurrentUser());
+		Comment comment = findByIdWithAuthorOrAdminOrOrganizerCheck(commentId, userUtil.getCurrentUser());
 		commentRepository.delete(comment);
 	}
 
@@ -31,9 +31,9 @@ public class CommentService {
 				);
 	}
 
-	private Comment findByIdWithAuthorOrAdminCheck(Long commentId, User author) {
+	private Comment findByIdWithAuthorOrAdminOrOrganizerCheck(Long commentId, User user) {
 		return Option.ofOptional(commentRepository.findById(commentId))
-				.filter(c -> author.getRole().equals(Role.ADMIN) || c.getAuthor().equals(author))
+				.filter(c -> user.getRole().equals(Role.ADMIN) || c.getAuthor().equals(user) || c.getConference().getOrganizer().equals(user))
 				.getOrElseThrow(
 						() -> new ResponseStatusException(HttpStatus.NOT_FOUND)
 				);
