@@ -23,6 +23,7 @@ public class Conference {
 	@JoinColumn(name = "organizer_id")
 	private User organizer;
 	private String name;
+	@Column(length = 200, columnDefinition = "text")
 	private String description;
 	@ManyToOne
 	@JoinColumn(name = "image_id")
