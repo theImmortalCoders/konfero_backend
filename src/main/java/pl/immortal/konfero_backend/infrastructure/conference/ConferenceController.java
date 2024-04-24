@@ -50,7 +50,7 @@ public class ConferenceController {
 		conferenceManageUseCase.updateInfo(conferenceId, request);
 	}
 
-	@PatchMapping("/{conferenceId}/cancel")
+	@DeleteMapping("/{conferenceId}/cancel")
 	@Operation(summary = "Cancel conference (Organizer, Admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
