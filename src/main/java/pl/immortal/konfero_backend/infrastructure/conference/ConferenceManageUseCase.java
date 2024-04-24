@@ -97,7 +97,7 @@ public class ConferenceManageUseCase {
 		}
 		c.setTags(new ArrayList<>(tags));
 		c.setOrganizer(userUtil.getCurrentUser());
-		c.setPhotos(fileUtil.getImagesByIds(request.getPhotosIds()));
+		c.setPhotos(new ArrayList<>(fileUtil.getImagesByIds(request.getPhotosIds())));
 		conferenceUtil.updateConferenceEndTimeByLectures(c);
 		if (c.getOrganizer().isVerified()) {
 			c.setVerified(true);
