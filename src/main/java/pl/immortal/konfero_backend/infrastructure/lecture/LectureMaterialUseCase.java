@@ -10,6 +10,8 @@ import pl.immortal.konfero_backend.model.entity.File;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 
+import java.util.ArrayList;
+
 @Component
 @AllArgsConstructor
 public class LectureMaterialUseCase {
@@ -25,6 +27,9 @@ public class LectureMaterialUseCase {
 		checkMaterialOwnership(material, user);
 
 		lecture.getMaterials().add(material);
+		lecture.setMaterials(new ArrayList<>(lecture.getMaterials()
+						.stream()
+								.distinct().toList()));
 		lectureUtil.save(lecture);
 	}
 
