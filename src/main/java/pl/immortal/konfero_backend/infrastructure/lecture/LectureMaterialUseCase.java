@@ -27,6 +27,9 @@ public class LectureMaterialUseCase {
 		checkMaterialOwnership(material, user);
 
 		lecture.getMaterials().add(material);
+		lecture.setMaterials(new ArrayList<>(lecture.getMaterials()
+						.stream()
+								.distinct().toList()));
 		lectureUtil.save(lecture);
 	}
 
