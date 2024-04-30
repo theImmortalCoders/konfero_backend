@@ -28,8 +28,8 @@ public class LectureMaterialUseCase {
 
 		lecture.getMaterials().add(material);
 		lecture.setMaterials(new ArrayList<>(lecture.getMaterials()
-						.stream()
-								.distinct().toList()));
+				.stream()
+				.distinct().toList()));
 		lectureUtil.save(lecture);
 	}
 

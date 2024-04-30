@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface OrganizerRequestRepository extends JpaRepository<OrganizerRequest, Long> {
 	List<OrganizerRequest> findAllByStatus(OrganizerRequest.OrganizerRequestStatus status);
+
 	Boolean existsByUserAndStatus(User user, OrganizerRequest.OrganizerRequestStatus status);
 }
