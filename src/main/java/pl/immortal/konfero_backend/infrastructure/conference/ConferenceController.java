@@ -26,6 +26,7 @@ import java.util.List;
 public class ConferenceController {
 	private final ConferenceManageUseCase conferenceManageUseCase;
 	private final ConferenceGetUseCase conferenceGetUseCase;
+	private final ConferenceAttendUseCase conferenceAttendUseCase;
 
 	@PostMapping
 	@Operation(summary = "Add new conference (Organizer, admin)", description = "Organizer role required")
@@ -71,6 +72,28 @@ public class ConferenceController {
 	@PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
 	public void deleteConference(@PathVariable Long conferenceId) {
 		conferenceManageUseCase.delete(conferenceId);
+	}
+
+	@PostMapping("/{conferenceId}/attend")
+	@Operation(summary = "Sign up for conference")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You already take part")
+	@ApiResponse(responseCode = "404", description = "Conference not found")
+	@PreAuthorize("isAuthenticated()")
+	public void signUp(@PathVariable Long conferenceId) {
+		conferenceAttendUseCase.signUp(conferenceId);
+	}
+
+	@DeleteMapping("/{conferenceId}/attend")
+	@Operation(summary = "Sign out from conference")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You haven't been signed up")
+	@ApiResponse(responseCode = "404", description = "Conference not found")
+	@PreAuthorize("isAuthenticated()")
+	public void signOut(@PathVariable Long conferenceId) {
+		conferenceAttendUseCase.signOut(conferenceId);
 	}
 
 	@GetMapping("/{conferenceId}/details")
