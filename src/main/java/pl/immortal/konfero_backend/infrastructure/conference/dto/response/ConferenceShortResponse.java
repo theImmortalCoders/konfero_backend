@@ -23,4 +23,6 @@ public class ConferenceShortResponse {
 	private Conference.Format format;
 	private boolean verified;
 	private boolean participantsFull;
+	private int participantsAmount;
+	private boolean amISignedUp;
 }

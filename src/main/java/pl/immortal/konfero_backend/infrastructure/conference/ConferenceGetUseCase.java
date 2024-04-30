@@ -28,13 +28,15 @@ public class ConferenceGetUseCase {
 
 		if (user == null || user.getRole().equals(Role.USER)) {
 			Conference conference = conferenceUtil.getById(conferenceId);
-			updateFullStatus(conference);
-			return conferenceMapper.guestMap(conference);
+			var response = conferenceMapper.guestMap(conference);
+			setConferenceResponseStats(response, conference, user);
+			return response;
 		}
 
 		Conference conference = conferenceUtil.getByIdWithAuthorLecturerOrParticipantCheck(user, conferenceId);
-		updateFullStatus(conference);
-		return conferenceMapper.map(conference);
+		var response = conferenceMapper.map(conference);
+		setConferenceResponseStats(response, conference, user);
+		return response;
 	}
 
 	public Page<ConferenceShortResponse> getAll(PageRequest pageRequest, ConferenceSearchFields searchFields) {
@@ -54,17 +56,26 @@ public class ConferenceGetUseCase {
 		return new PageImpl<>(
 				conferences
 						.stream()
-						.peek(ConferenceGetUseCase::updateFullStatus)
-						.map(conferenceMapper::shortMap)
+						.map(c -> {
+							var response = conferenceMapper.shortMap(c);
+							setConferenceResponseStats(response, c, userUtil.getCurrentUser());
+							return response;
+						})
 						.toList(), pageRequest, conferenceRepository.count()
 		);
 	}
 
 	//
 
-	private static void updateFullStatus(Conference conference) {
-		if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
-			conference.setParticipantsFull(true);
-		}
+	private static void setConferenceResponseStats(ConferenceSingleResponse response, Conference conference, User user) {
+		response.setAmISignedUp(conference.getParticipants().contains(user));
+		response.setParticipantsAmount(conference.getParticipants().size());
 	}
+
+	private static void setConferenceResponseStats(ConferenceShortResponse response, Conference conference, User user) {
+		response.setAmISignedUp(conference.getParticipants().contains(user));
+		response.setParticipantsAmount(conference.getParticipants().size());
+	}
+
+
 }
