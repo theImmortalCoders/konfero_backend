@@ -109,9 +109,9 @@ public class LectureController {
 	@ApiResponse(responseCode = "401")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<List<LectureShortResponse>> getMyFavourites(
-			@RequestParam(required = false) LectureStatus status
+			@RequestParam(required = false) LectureStatus lectureStatus
 	) {
-		return ResponseEntity.ok(lectureService.getMyFavourites(status));
+		return ResponseEntity.ok(lectureService.getMyFavourites(lectureStatus));
 	}
 
 }

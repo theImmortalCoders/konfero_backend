@@ -127,14 +127,14 @@ public class LectureService {
 		lectureUtil.save(lecture);
 	}
 
-	List<LectureShortResponse> getMyFavourites(LectureStatus status) {
+	List<LectureShortResponse> getMyFavourites(LectureStatus lectureStatus) {
 		User user = userUtil.getCurrentUser();
 
-		if (status == null) return lectureRepository.findAllByInterestedContaining(user)
+		if (lectureStatus == null) return lectureRepository.findAllByInterestedContaining(user)
 				.stream()
 				.map(lectureMapper::shortMap)
 				.toList();
-		if (status.equals(LectureStatus.ENDED))
+		if (lectureStatus.equals(LectureStatus.ENDED))
 			return lectureRepository.findAllByInterestedContainingAndStartDateTimeBefore(user, LocalDateTime.now())
 					.stream()
 					.map(lectureMapper::shortMap)
