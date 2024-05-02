@@ -15,6 +15,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.request.Confere
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceShortResponse;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleResponse;
 import pl.immortal.konfero_backend.model.ConferenceSearchFields;
+import pl.immortal.konfero_backend.model.ConferenceStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -97,7 +98,7 @@ public class ConferenceController {
 	}
 
 	@GetMapping("/{conferenceId}/details")
-	@Operation(summary = "Get conference details with role filtering")
+	@Operation(summary = "Get conference details with role checking")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "404", description = "Conference not found")
 	public ResponseEntity<ConferenceSingleResponse> getDetails(@PathVariable Long conferenceId) {
@@ -120,7 +121,8 @@ public class ConferenceController {
 			@RequestParam(required = false) Integer participantsLimit,
 			@RequestParam(required = false) Boolean verified,
 			@RequestParam(required = false) Boolean participantsFull,
-			@RequestParam(required = false) Long organizerId
+			@RequestParam(required = false) Long organizerId,
+			@RequestParam(required = false) String locationName
 	) {
 		var pageRequest = PageRequest.of(page, size, sortDirection, sort);
 		var searchFields = new ConferenceSearchFields(
@@ -132,9 +134,22 @@ public class ConferenceController {
 				participantsLimit,
 				verified,
 				participantsFull,
-				organizerId
+				organizerId,
+				locationName
 		);
 
 		return ResponseEntity.ok(conferenceGetUseCase.getAll(pageRequest, searchFields));
 	}
+
+	@GetMapping("/my")
+	@Operation(summary = "Get all conferences I am signed for")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<ConferenceShortResponse>> getMyConferences(
+			@RequestParam(required = false) ConferenceStatus conferenceStatus
+	) {
+		return ResponseEntity.ok(conferenceGetUseCase.getMy(conferenceStatus));
+	}
+
 }

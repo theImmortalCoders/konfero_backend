@@ -12,5 +12,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
 	List<Lecture> findAllByInterestedContainingAndStartDateTimeBefore(User user, LocalDateTime time);
 
+
 	List<Lecture> findAllByInterestedContainingAndStartDateTimeAfter(User user, LocalDateTime time);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Tag;
+import pl.immortal.konfero_backend.model.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			"AND (cast (?7 as localdatetime) IS NULL OR c.endDateTime <= ?7) " +
 			"AND (?8 IS NULL OR EXISTS (" +
 			"   SELECT 1 FROM c.tags t WHERE t.id IN ?8))" +
-			"AND (?9 IS NULL OR c.organizer.id = ?9)")
+			"AND (?9 IS NULL OR c.organizer.id = ?9)" +
+			"AND (?10 IS NULL OR cast(c.location as string) like %?10%)")
 	Page<Conference> findAllWithFilters(
 			@Param("name") String name,
 			@Param("canceled") Boolean canceled,
@@ -33,9 +35,18 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			@Param("startDateTimeTo") LocalDateTime startDateTimeTo,
 			@Param("tags") List<Long> tagsIds,
 			@Param("organizerId") Long organizerId,
+			@Param("locationName") String locationName,
 			Pageable pageable
 	);
 
 	List<Conference> findAllByTagsContaining(Tag tag);
+
+	List<Conference> findAllByParticipantsContaining(User user);
+
+	List<Conference> findAllByParticipantsContainingAndEndDateTimeBefore(User user, LocalDateTime time);
+
+	List<Conference> findAllByParticipantsContainingAndStartDateTimeBeforeAndEndDateTimeAfter(User user, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+	List<Conference> findAllByParticipantsContainingAndStartDateTimeAfter(User user, LocalDateTime time);
 
 }

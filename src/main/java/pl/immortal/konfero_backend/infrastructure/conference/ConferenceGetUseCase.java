@@ -10,10 +10,14 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.ConferenceMappe
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceShortResponse;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleResponse;
 import pl.immortal.konfero_backend.model.ConferenceSearchFields;
+import pl.immortal.konfero_backend.model.ConferenceStatus;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -50,6 +54,7 @@ public class ConferenceGetUseCase {
 				searchFields.getStartDateTimeTo(),
 				searchFields.getTagsIds(),
 				searchFields.getOrganizerId(),
+				searchFields.getLocationName(),
 				pageRequest
 		);
 
@@ -58,24 +63,46 @@ public class ConferenceGetUseCase {
 						.stream()
 						.map(c -> {
 							var response = conferenceMapper.shortMap(c);
-							setConferenceResponseStats(response, c, userUtil.getCurrentUser());
+							setConferenceResponseStats(response, c, userUtil.getCurrentUserOrNull());
 							return response;
 						})
 						.toList(), pageRequest, conferenceRepository.count()
 		);
 	}
 
+	List<ConferenceShortResponse> getMy(ConferenceStatus lectureStatus) {
+		User user = userUtil.getCurrentUser();
+
+		if (lectureStatus == null)
+			return conferenceRepository.findAllByParticipantsContaining(user)
+					.stream()
+					.map(conferenceMapper::shortMap)
+					.toList();
+		if (lectureStatus.equals(ConferenceStatus.ENDED))
+			return conferenceRepository.findAllByParticipantsContainingAndEndDateTimeBefore(user, LocalDateTime.now())
+					.stream()
+					.map(conferenceMapper::shortMap)
+					.toList();
+		if (lectureStatus.equals(ConferenceStatus.ONGOING))
+			return conferenceRepository.findAllByParticipantsContainingAndStartDateTimeBeforeAndEndDateTimeAfter(user, LocalDateTime.now(), LocalDateTime.now())
+					.stream()
+					.map(conferenceMapper::shortMap)
+					.toList();
+		return conferenceRepository.findAllByParticipantsContainingAndStartDateTimeAfter(user, LocalDateTime.now())
+				.stream()
+				.map(conferenceMapper::shortMap)
+				.toList();
+	}
+
 	//
 
 	private static void setConferenceResponseStats(ConferenceSingleResponse response, Conference conference, User user) {
-		response.setAmISignedUp(conference.getParticipants().contains(user));
+		if (user != null) response.setAmISignedUp(conference.getParticipants().contains(user));
 		response.setParticipantsAmount(conference.getParticipants().size());
 	}
 
 	private static void setConferenceResponseStats(ConferenceShortResponse response, Conference conference, User user) {
-		response.setAmISignedUp(conference.getParticipants().contains(user));
+		if (user != null) response.setAmISignedUp(conference.getParticipants().contains(user));
 		response.setParticipantsAmount(conference.getParticipants().size());
 	}
-
-
 }
