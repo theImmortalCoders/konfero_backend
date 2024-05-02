@@ -11,8 +11,10 @@ import pl.immortal.konfero_backend.infrastructure.file.FileUtil;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.LectureMapper;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureShortResponse;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
+import pl.immortal.konfero_backend.model.LectureStatus;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
@@ -96,6 +98,51 @@ public class LectureService {
 		return Option.of(lectureUtil.getById(lectureId))
 				.map(lectureMapper::map)
 				.get();
+	}
+
+	void addToFavourites(Long lectureId) {
+		User user = userUtil.getCurrentUser();
+		Lecture lecture = lectureUtil.getById(lectureId);
+
+		if (!lecture.getConference().getParticipants().contains(user)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not signed in for conference");
+		}
+
+		lecture.getInterested().add(user);
+		lectureUtil.save(lecture);
+	}
+
+	void removeFromFavourites(Long lectureId) {
+		User user = userUtil.getCurrentUser();
+		Lecture lecture = lectureUtil.getById(lectureId);
+
+		if (!lecture.getConference().getParticipants().contains(user)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not signed in for conference");
+		}
+		if (!lecture.getInterested().contains(user)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You did not add lecture to favourites");
+		}
+
+		lecture.getInterested().remove(user);
+		lectureUtil.save(lecture);
+	}
+
+	List<LectureShortResponse> getMyFavourites(LectureStatus status) {
+		User user = userUtil.getCurrentUser();
+
+		if (status == null) return lectureRepository.findAllByInterestedContaining(user)
+				.stream()
+				.map(lectureMapper::shortMap)
+				.toList();
+		if (status.equals(LectureStatus.ENDED))
+			return lectureRepository.findAllByInterestedContainingAndStartDateTimeBefore(user, LocalDateTime.now())
+					.stream()
+					.map(lectureMapper::shortMap)
+					.toList();
+		return lectureRepository.findAllByInterestedContainingAndStartDateTimeAfter(user, LocalDateTime.now())
+				.stream()
+				.map(lectureMapper::shortMap)
+				.toList();
 	}
 
 	//

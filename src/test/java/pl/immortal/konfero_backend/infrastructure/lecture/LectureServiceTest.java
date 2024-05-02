@@ -157,4 +157,45 @@ public class LectureServiceTest {
 
 		assertEquals(response, lectureService.getById(1L));
 	}
+
+	@Test
+	public void shouldAddToFavourites() {
+		conference.setParticipants(new ArrayList<>(List.of(user)));
+
+		lectureService.addToFavourites(1L);
+
+		verify(lectureRepository, times(1)).save(any(Lecture.class));
+		assertEquals(lecture.getInterested(), List.of(user));
+	}
+
+	@Test
+	public void shouldThrowForbiddenWhenNotSignedIn() {
+		assertThrows(
+				ResponseStatusException.class,
+				() -> lectureService.addToFavourites(1L)
+		);
+	}
+
+	@Test
+	public void shouldRemoveFromFavourites() {
+		conference.setParticipants(new ArrayList<>(List.of(user)));
+		lecture.setInterested(new ArrayList<>(List.of(user)));
+		conference.setEndDateTime(LocalDateTime.now().plusMinutes(1));
+
+		lectureService.removeFromFavourites(1L);
+
+		verify(lectureRepository, times(1)).save(any(Lecture.class));
+		assertEquals(lecture.getInterested(), new ArrayList<>());
+	}
+
+	@Test
+	public void shouldThrowForbiddenWhenRemoveFromFavourites() {
+		conference.setParticipants(new ArrayList<>(List.of(user)));
+		conference.setEndDateTime(LocalDateTime.now().plusMinutes(1));
+
+		assertThrows(
+				ResponseStatusException.class,
+				() -> lectureService.removeFromFavourites(1L)
+		);
+	}
 }
