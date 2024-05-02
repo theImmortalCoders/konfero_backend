@@ -10,7 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleLecturerRequest;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.request.LectureSingleOrganizerRequest;
+import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureShortResponse;
 import pl.immortal.konfero_backend.infrastructure.lecture.dto.response.LectureSingleResponse;
+import pl.immortal.konfero_backend.model.LectureStatus;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "Lecture", description = "Lecture CRUD")
@@ -67,12 +71,47 @@ public class LectureController {
 		lectureService.delete(lectureId);
 	}
 
+	@PostMapping("/{lectureId}/interested")
+	@Operation(summary = "Add lecture to the favourites (User signed in for conference)")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "403", description = "You are not signed in for conference")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400")
+	@ApiResponse(responseCode = "404", description = "Lecture not found")
+	@PreAuthorize("isAuthenticated()")
+	public void addToFavourites(@PathVariable Long lectureId) {
+		lectureService.addToFavourites(lectureId);
+	}
+
+	@DeleteMapping("/{lectureId}/interested")
+	@Operation(summary = "Remove lecture from favourites (User signed in for conference)")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "403", description = "You are not signed in for conference")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You did not added lecture to favourites")
+	@ApiResponse(responseCode = "404", description = "Lecture not found")
+	@PreAuthorize("isAuthenticated()")
+	public void removeFromFavourites(@PathVariable Long lectureId) {
+		lectureService.removeFromFavourites(lectureId);
+	}
+
 	@GetMapping("/{lectureId}")
 	@Operation(summary = "Get lecture details")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "404", description = "Lecture not found")
 	public ResponseEntity<LectureSingleResponse> getById(@PathVariable Long lectureId) {
 		return ResponseEntity.ok(lectureService.getById(lectureId));
+	}
+
+	@GetMapping("/favourite")
+	@Operation(summary = "Get my favourite lectures")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<LectureShortResponse>> getMyFavourites(
+			@RequestParam(required = false) LectureStatus status
+	) {
+		return ResponseEntity.ok(lectureService.getMyFavourites(status));
 	}
 
 }

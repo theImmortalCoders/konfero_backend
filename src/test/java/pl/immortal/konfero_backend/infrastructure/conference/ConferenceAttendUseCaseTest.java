@@ -16,6 +16,7 @@ import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -50,6 +51,7 @@ public class ConferenceAttendUseCaseTest {
 
 	@Test
 	public void shouldSignUp() {
+		conference.setEndDateTime(LocalDateTime.now().plusMinutes(1));
 		conferenceAttendUseCase.signUp(1L);
 
 		verify(conferenceRepository, times(1)).save(any(Conference.class));
@@ -67,6 +69,7 @@ public class ConferenceAttendUseCaseTest {
 
 	@Test
 	public void shouldThrowOnLimit() {
+		conference.setEndDateTime(LocalDateTime.now().plusMinutes(1));
 		conference.setParticipantsFull(true);
 
 		assertThrows(

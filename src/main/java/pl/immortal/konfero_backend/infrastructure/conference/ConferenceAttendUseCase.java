@@ -9,6 +9,8 @@ import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.User;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class ConferenceAttendUseCase {
@@ -20,7 +22,8 @@ public class ConferenceAttendUseCase {
 		User user = userUtil.getCurrentUser();
 		Conference conference = conferenceUtil.getById(conferenceId);
 
-		if (conference.isCanceled()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conference cancelled");
+		if (conference.isCanceled() || conference.getEndDateTime().isBefore(LocalDateTime.now()))
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conference cancelled or ended");
 		if (conference.isParticipantsFull())
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participants full");
 
