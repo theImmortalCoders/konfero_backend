@@ -26,6 +26,8 @@ public class ConferenceAttendUseCase {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conference cancelled or ended");
 		if (conference.isParticipantsFull())
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Participants full");
+		if (conference.getParticipants().contains(user))
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You've already signed in");
 
 		conference.getParticipants().add(user);
 		updateFullStatus(conference);

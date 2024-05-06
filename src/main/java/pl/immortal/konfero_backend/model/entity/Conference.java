@@ -36,7 +36,7 @@ public class Conference {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<User> participants = new ArrayList<>();
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "conference")
 	@ToString.Exclude
 	private List<Lecture> lectures = new ArrayList<>();
 	private boolean canceled;
