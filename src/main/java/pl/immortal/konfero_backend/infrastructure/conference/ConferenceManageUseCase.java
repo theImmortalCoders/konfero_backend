@@ -102,6 +102,9 @@ public class ConferenceManageUseCase {
 		if (c.getOrganizer().isVerified()) {
 			c.setVerified(true);
 		}
+		if(c.getParticipantsLimit() == 0){
+			c.setParticipantsFull(true);
+		}
 	}
 
 	private Conference getConferenceWithUserCheck(Long conferenceId) {
