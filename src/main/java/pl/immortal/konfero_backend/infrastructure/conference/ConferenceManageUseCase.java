@@ -99,6 +99,7 @@ public class ConferenceManageUseCase {
 		c.setOrganizer(userUtil.getCurrentUser());
 		c.setPhotos(new ArrayList<>(fileUtil.getImagesByIds(request.getPhotosIds())));
 		conferenceUtil.updateConferenceEndTimeByLectures(c);
+		conferenceUtil.updateFullStatus(c);
 		if (c.getOrganizer().isVerified()) {
 			c.setVerified(true);
 		}

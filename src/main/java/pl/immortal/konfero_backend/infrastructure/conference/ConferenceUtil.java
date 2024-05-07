@@ -80,6 +80,12 @@ public class ConferenceUtil {
 				);
 	}
 
+	public void updateFullStatus(Conference conference) {
+		if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
+			conference.setParticipantsFull(true);
+		}
+	}
+
 	//
 
 	private static boolean notOwnerOrAdmin(User user, Conference conference) {

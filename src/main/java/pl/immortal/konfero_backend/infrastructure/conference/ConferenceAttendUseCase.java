@@ -30,7 +30,7 @@ public class ConferenceAttendUseCase {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You've already signed in");
 
 		conference.getParticipants().add(user);
-		updateFullStatus(conference);
+		conferenceUtil.updateFullStatus(conference);
 
 		conferenceUtil.save(conference);
 
@@ -50,7 +50,7 @@ public class ConferenceAttendUseCase {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't been signed up");
 
 		conference.getParticipants().remove(user);
-		updateFullStatus(conference);
+		conferenceUtil.updateFullStatus(conference);
 
 		conferenceUtil.save(conference);
 
@@ -64,9 +64,5 @@ public class ConferenceAttendUseCase {
 
 	//
 
-	private static void updateFullStatus(Conference conference) {
-		if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
-			conference.setParticipantsFull(true);
-		}
-	}
+
 }
