@@ -81,9 +81,7 @@ public class ConferenceUtil {
 	}
 
 	public void updateFullStatus(Conference conference) {
-		if (conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size()) {
-			conference.setParticipantsFull(true);
-		}
+		conference.setParticipantsFull(conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size());
 	}
 
 	//
