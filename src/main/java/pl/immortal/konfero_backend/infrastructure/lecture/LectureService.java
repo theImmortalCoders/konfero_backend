@@ -107,6 +107,9 @@ public class LectureService {
 		if (!lecture.getConference().getParticipants().contains(user)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not signed in for conference");
 		}
+		if(lecture.getInterested().contains(user)){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already added to favourites");
+		}
 
 		lecture.getInterested().add(user);
 		lectureUtil.save(lecture);
