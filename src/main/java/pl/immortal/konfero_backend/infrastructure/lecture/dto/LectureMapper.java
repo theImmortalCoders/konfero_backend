@@ -59,6 +59,7 @@ public interface LectureMapper {
 
 		LectureSingleResponse lectureSingleResponse = new LectureSingleResponse();
 
+		lectureSingleResponse.setFormat(lecture.getConference().getFormat());
 		lectureSingleResponse.setConferenceId(lectureConferenceId(lecture));
 		lectureSingleResponse.setId(lecture.getId());
 		lectureSingleResponse.setName(lecture.getName());
