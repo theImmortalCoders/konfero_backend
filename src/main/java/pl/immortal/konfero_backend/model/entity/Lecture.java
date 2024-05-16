@@ -15,7 +15,9 @@ public class Lecture {
 	@GeneratedValue
 	private Long id;
 	private String name;
+	@Column(length = 200, columnDefinition = "text")
 	private String description;
+	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime startDateTime;
 	private int durationMinutes;
 	private String place;

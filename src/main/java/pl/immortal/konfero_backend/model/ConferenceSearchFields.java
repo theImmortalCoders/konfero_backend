@@ -18,4 +18,5 @@ public class ConferenceSearchFields {
 	private Boolean verified;
 	private Boolean participantsFull;
 	private Long organizerId;
+	private String locationName;
 }

@@ -66,7 +66,7 @@ public class ConferenceManageUseCaseTest {
 		conference.setStartDateTime(LocalDateTime.now().plusMonths(1).plusDays(1));
 		tag = new Tag();
 		tag.setId(1L);
-		tag.setTagName(Conference.TagName.IT);
+		tag.setTagName("IT");
 
 		when(userUtil.getCurrentUser()).thenReturn(user);
 		when(conferenceRepository.save(any(Conference.class))).thenReturn(conference);

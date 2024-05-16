@@ -15,6 +15,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.request.Confere
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceShortResponse;
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleResponse;
 import pl.immortal.konfero_backend.model.ConferenceSearchFields;
+import pl.immortal.konfero_backend.model.ConferenceStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,31 +27,32 @@ import java.util.List;
 public class ConferenceController {
 	private final ConferenceManageUseCase conferenceManageUseCase;
 	private final ConferenceGetUseCase conferenceGetUseCase;
+	private final ConferenceAttendUseCase conferenceAttendUseCase;
 
 	@PostMapping
-	@Operation(summary = "Add new conference (Organizer)", description = "Organizer role required")
+	@Operation(summary = "Add new conference (Organizer, admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403")
 	@ApiResponse(responseCode = "401")
 	@ApiResponse(responseCode = "400")
-	@PreAuthorize("hasAnyAuthority('ORGANIZER')")
+	@PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
 	public void add(@RequestBody @Valid ConferenceSingleRequest request) {
 		conferenceManageUseCase.add(request);
 	}
 
 	@PutMapping("/{conferenceId}")
-	@Operation(summary = "Update info about conference (Organizer)", description = "Organizer role required")
+	@Operation(summary = "Update info about conference (Organizer, admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
 	@ApiResponse(responseCode = "401")
 	@ApiResponse(responseCode = "400")
 	@ApiResponse(responseCode = "404", description = "Conference not found")
-	@PreAuthorize("hasAnyAuthority('ORGANIZER')")
+	@PreAuthorize("hasAnyAuthority('ORGANIZER', 'ADMIN')")
 	public void updateInfo(@PathVariable Long conferenceId, @RequestBody @Valid ConferenceSingleRequest request) {
 		conferenceManageUseCase.updateInfo(conferenceId, request);
 	}
 
-	@PatchMapping("/{conferenceId}/cancel")
+	@DeleteMapping("/{conferenceId}/cancel")
 	@Operation(summary = "Cancel conference (Organizer, Admin)", description = "Organizer role required")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "403", description = "You not own the conference or not have role")
@@ -73,8 +75,30 @@ public class ConferenceController {
 		conferenceManageUseCase.delete(conferenceId);
 	}
 
+	@PostMapping("/{conferenceId}/attend")
+	@Operation(summary = "Sign up for conference")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You already take part")
+	@ApiResponse(responseCode = "404", description = "Conference not found")
+	@PreAuthorize("isAuthenticated()")
+	public void signUp(@PathVariable Long conferenceId) {
+		conferenceAttendUseCase.signUp(conferenceId);
+	}
+
+	@DeleteMapping("/{conferenceId}/attend")
+	@Operation(summary = "Sign out from conference")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@ApiResponse(responseCode = "400", description = "You haven't been signed up")
+	@ApiResponse(responseCode = "404", description = "Conference not found")
+	@PreAuthorize("isAuthenticated()")
+	public void signOut(@PathVariable Long conferenceId) {
+		conferenceAttendUseCase.signOut(conferenceId);
+	}
+
 	@GetMapping("/{conferenceId}/details")
-	@Operation(summary = "Get conference details with role filtering")
+	@Operation(summary = "Get conference details with role checking")
 	@ApiResponse(responseCode = "200")
 	@ApiResponse(responseCode = "404", description = "Conference not found")
 	public ResponseEntity<ConferenceSingleResponse> getDetails(@PathVariable Long conferenceId) {
@@ -97,7 +121,8 @@ public class ConferenceController {
 			@RequestParam(required = false) Integer participantsLimit,
 			@RequestParam(required = false) Boolean verified,
 			@RequestParam(required = false) Boolean participantsFull,
-			@RequestParam(required = false) Long organizerId
+			@RequestParam(required = false) Long organizerId,
+			@RequestParam(required = false) String locationName
 	) {
 		var pageRequest = PageRequest.of(page, size, sortDirection, sort);
 		var searchFields = new ConferenceSearchFields(
@@ -109,9 +134,22 @@ public class ConferenceController {
 				participantsLimit,
 				verified,
 				participantsFull,
-				organizerId
+				organizerId,
+				locationName
 		);
 
 		return ResponseEntity.ok(conferenceGetUseCase.getAll(pageRequest, searchFields));
 	}
+
+	@GetMapping("/my")
+	@Operation(summary = "Get all conferences I am signed for")
+	@ApiResponse(responseCode = "200")
+	@ApiResponse(responseCode = "401")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<List<ConferenceShortResponse>> getMyConferences(
+			@RequestParam(required = false) ConferenceStatus conferenceStatus
+	) {
+		return ResponseEntity.ok(conferenceGetUseCase.getMy(conferenceStatus));
+	}
+
 }

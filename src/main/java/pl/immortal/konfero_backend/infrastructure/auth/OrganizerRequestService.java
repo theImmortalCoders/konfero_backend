@@ -25,6 +25,9 @@ public class OrganizerRequestService {
 	void becomeOrganizer(OrganizerSingleBecomeRequest request) {
 		User user = userUtil.getCurrentUser();
 
+		if (organizerRequestRepository.existsByUserAndStatus(user, OrganizerRequest.OrganizerRequestStatus.PENDING)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request already sent");
+		}
 		if (!user.getRole().equals(Role.USER)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already has authority");
 		}

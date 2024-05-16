@@ -29,7 +29,7 @@ public class OidcAuthService extends OidcUserService {
 		OidcUser oidcUser = super.loadUser(userRequest);
 		var attributes = oidcUser.getAttributes();
 		User user = userRepository
-				.findByUsername((String) attributes.get("email"))
+				.findByEmail((String) attributes.get("email"))
 				.orElseGet(() -> createUser(attributes));
 		userRepository.save(user);
 

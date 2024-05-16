@@ -23,6 +23,7 @@ public class Conference {
 	@JoinColumn(name = "organizer_id")
 	private User organizer;
 	private String name;
+	@Column(length = 200, columnDefinition = "text")
 	private String description;
 	@ManyToOne
 	@JoinColumn(name = "image_id")
@@ -35,7 +36,7 @@ public class Conference {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@ToString.Exclude
 	private List<User> participants = new ArrayList<>();
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "conference")
 	@ToString.Exclude
 	private List<Lecture> lectures = new ArrayList<>();
 	private boolean canceled;
@@ -45,13 +46,9 @@ public class Conference {
 	@ManyToMany
 	private List<File> photos;
 	private boolean verified;
-	@ManyToMany(cascade = CascadeType.REMOVE)
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conference")
 	private List<Comment> comments;
 	private boolean participantsFull;
-
-	public enum TagName {
-		IT, AI, LIFESTYLE, HEALTH, FASHION, NUTRITION
-	}
 
 	public enum Format {
 		STATIONARY, ONLINE

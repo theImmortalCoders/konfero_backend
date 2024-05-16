@@ -76,7 +76,7 @@ public class SecurityConfig {
 				)
 				.logout(logout -> logout
 						.logoutUrl(applicationProps.getLogoutUri())
-						.logoutSuccessUrl(applicationProps.getRedirectUri())
+						.logoutSuccessUrl(applicationProps.getLogoutRedirectUri())
 						.invalidateHttpSession(false)
 						.deleteCookies("JSESSIONID")
 				);

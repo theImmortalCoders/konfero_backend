@@ -16,6 +16,5 @@ public class LectureSingleOrganizerRequest {
 	private int durationMinutes;
 	private Long imageId;
 	private List<Long> lecturersIds;
-	@Size(min = 3, max = 20)
 	private String place;
 }

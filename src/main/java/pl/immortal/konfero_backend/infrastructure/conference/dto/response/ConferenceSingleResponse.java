@@ -33,4 +33,6 @@ public class ConferenceSingleResponse {
 	private boolean verified;
 	private List<CommentSingleResponse> comments;
 	private boolean participantsFull;
+	private int participantsAmount;
+	private boolean amISignedUp;
 }

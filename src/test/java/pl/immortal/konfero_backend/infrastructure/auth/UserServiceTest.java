@@ -19,7 +19,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapperImpl;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.mail.MailTemplateService;
 import pl.immortal.konfero_backend.model.Role;
@@ -32,8 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -80,18 +78,6 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void shouldUpdateProfile() {
-		var updateRequest = new ProfileUpdateSingleRequest();
-		updateRequest.setCity("city");
-		updateRequest.setPhone("phone");
-
-		userService.updateProfile(updateRequest);
-
-		assertEquals(updateRequest.getCity(), user.getCity());
-		assertEquals(updateRequest.getPhone(), user.getPhone());
-	}
-
-	@Test
 	public void shouldUpdateRole() {
 		Role newRole = Role.ADMIN;
 
@@ -131,5 +117,13 @@ public class UserServiceTest {
 		when(userRepository.findAll()).thenReturn(new ArrayList<>(List.of(user)));
 
 		assertEquals(new ArrayList<>(List.of(response)), userService.getAll());
+	}
+
+	@Test
+	public void shouldVerifyUser() {
+		userService.verify(1L);
+
+		assertTrue(user.isVerified());
+		verify(userRepository, times(1)).save(user);
 	}
 }

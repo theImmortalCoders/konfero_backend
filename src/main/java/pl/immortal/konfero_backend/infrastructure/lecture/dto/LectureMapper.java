@@ -20,7 +20,23 @@ import java.util.List;
 
 @Mapper
 public interface LectureMapper {
-	LectureShortResponse shortMap(Lecture lecture);
+	default LectureShortResponse shortMap(Lecture lecture) {
+		var response = new LectureShortResponse();
+		var fileMapper = new FileMapperImpl();
+
+		response.setId(lecture.getId());
+		response.setName(lecture.getName());
+		response.setStartDateTime(lecture.getStartDateTime());
+		response.setDurationMinutes(lecture.getDurationMinutes());
+		response.setPlace(lecture.getPlace());
+		response.setImage(fileMapper.map(lecture.getImage()));
+		response.setInterestedAmount(lecture.getInterested().size());
+		response.setConferenceName(lecture.getConference().getName());
+		response.setConferenceName(lecture.getConference().getName());
+		response.setConferenceId(lecture.getConference().getId());
+
+		return response;
+	}
 
 	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "image", ignore = true)
@@ -43,6 +59,7 @@ public interface LectureMapper {
 
 		LectureSingleResponse lectureSingleResponse = new LectureSingleResponse();
 
+		lectureSingleResponse.setFormat(lecture.getConference().getFormat());
 		lectureSingleResponse.setConferenceId(lectureConferenceId(lecture));
 		lectureSingleResponse.setId(lecture.getId());
 		lectureSingleResponse.setName(lecture.getName());

@@ -16,7 +16,10 @@ public class Comment {
 	private String content;
 	private LocalDateTime createdAt;
 	@ManyToOne
+	@JoinColumn(name = "conference_id")
+	private Conference conference;
+	@ManyToOne
 	private User author;
-	@ManyToMany
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> responses = new ArrayList<>();
 }

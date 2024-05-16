@@ -9,7 +9,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.UserMapper;
-import pl.immortal.konfero_backend.infrastructure.auth.dto.request.ProfileUpdateSingleRequest;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
 import pl.immortal.konfero_backend.model.Role;
@@ -30,14 +29,6 @@ public class UserService {
 		return userMapper.map(userUtil.getCurrentUser());
 	}
 
-	void updateProfile(ProfileUpdateSingleRequest request) {
-		User user = userUtil.getCurrentUser();
-
-		user.setPhone(request.getPhone());
-		user.setCity(request.getCity());
-
-		userUtil.saveUser(user);
-	}
 
 	void updateRole(Role newRole, Long userId, HttpServletRequest request, HttpServletResponse response) {
 		User user = userUtil.getUserById(userId);
@@ -68,6 +59,12 @@ public class UserService {
 				.stream()
 				.map(userMapper::shortMap)
 				.toList();
+	}
+
+	void verify(Long userId) {
+		User user = userUtil.getUserById(userId);
+		user.setVerified(true);
+		userUtil.saveUser(user);
 	}
 
 	//

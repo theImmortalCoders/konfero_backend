@@ -13,5 +13,6 @@ public class ApplicationProps {
 	private List<String> allowedOrigins;
 	private String loginUri;
 	private String redirectUri;
+	private String logoutRedirectUri;
 	private String logoutUri;
 }

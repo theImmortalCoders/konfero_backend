@@ -10,6 +10,8 @@ import pl.immortal.konfero_backend.model.entity.File;
 import pl.immortal.konfero_backend.model.entity.Lecture;
 import pl.immortal.konfero_backend.model.entity.User;
 
+import java.util.ArrayList;
+
 @Component
 @AllArgsConstructor
 public class LectureMaterialUseCase {
@@ -17,20 +19,23 @@ public class LectureMaterialUseCase {
 	private final UserUtil userUtil;
 	private final LectureUtil lectureUtil;
 
-	public void add(Long lectureId, Long materialId) {
+	public synchronized void add(Long lectureId, Long materialId) {
 		User user = userUtil.getCurrentUser();
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, user);
 		File material = fileUtil.getFileById(materialId);
 
 		checkMaterialOwnership(material, user);
 
 		lecture.getMaterials().add(material);
+		lecture.setMaterials(new ArrayList<>(lecture.getMaterials()
+				.stream()
+				.distinct().toList()));
 		lectureUtil.save(lecture);
 	}
 
 	public void remove(Long lectureId, Long materialId) {
 		User user = userUtil.getCurrentUser();
-		Lecture lecture = lectureUtil.getByIdWithAuthorityCheck(lectureId, user);
+		Lecture lecture = lectureUtil.getByIdAsOrganizerOrAdminOrLecturer(lectureId, user);
 		File material = fileUtil.getFileById(materialId);
 
 		lecture.getMaterials().remove(material);

@@ -8,11 +8,13 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.immortal.konfero_backend.model.Role;
 import pl.immortal.konfero_backend.model.entity.Conference;
 import pl.immortal.konfero_backend.model.entity.Lecture;
+import pl.immortal.konfero_backend.model.entity.Tag;
 import pl.immortal.konfero_backend.model.entity.User;
 import pl.immortal.konfero_backend.model.entity.repository.ConferenceRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -67,11 +69,19 @@ public class ConferenceUtil {
 		);
 	}
 
+	public List<Conference> findAllByTag(Tag tag) {
+		return conferenceRepository.findAllByTagsContaining(tag);
+	}
+
 	public void save(Conference request) {
 		Option.of(conferenceRepository.save(request))
 				.getOrElseThrow(
 						() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, request.toString())
 				);
+	}
+
+	public void updateFullStatus(Conference conference) {
+		conference.setParticipantsFull(conference.getParticipantsLimit() != null && conference.getParticipantsLimit() <= conference.getParticipants().size());
 	}
 
 	//
