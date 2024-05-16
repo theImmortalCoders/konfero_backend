@@ -16,6 +16,7 @@ import pl.immortal.konfero_backend.infrastructure.conference.dto.response.Confer
 import pl.immortal.konfero_backend.infrastructure.conference.dto.response.ConferenceSingleResponse;
 import pl.immortal.konfero_backend.model.ConferenceSearchFields;
 import pl.immortal.konfero_backend.model.ConferenceStatus;
+import pl.immortal.konfero_backend.model.entity.Conference;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -111,8 +112,8 @@ public class ConferenceController {
 	public ResponseEntity<Page<ConferenceShortResponse>> getAll(
 			@RequestParam(defaultValue = "20") int size,
 			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "id") String sort,
-			@RequestParam(defaultValue = "DESC") Sort.Direction sortDirection,
+			@RequestParam(defaultValue = "startDateTime") Conference.SortFields sort,
+			@RequestParam(defaultValue = "ASC") Sort.Direction sortDirection,
 			@RequestParam(required = false) LocalDateTime startDateTimeFrom,
 			@RequestParam(required = false) LocalDateTime startDateTimeTo,
 			@RequestParam(required = false) String name,
@@ -124,7 +125,7 @@ public class ConferenceController {
 			@RequestParam(required = false) Long organizerId,
 			@RequestParam(required = false) String locationName
 	) {
-		var pageRequest = PageRequest.of(page, size, sortDirection, sort);
+		var pageRequest = PageRequest.of(page, size, sortDirection, sort.toString());
 		var searchFields = new ConferenceSearchFields(
 				startDateTimeFrom,
 				startDateTimeTo,
