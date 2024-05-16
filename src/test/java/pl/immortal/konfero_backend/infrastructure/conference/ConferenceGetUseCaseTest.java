@@ -50,6 +50,8 @@ public class ConferenceGetUseCaseTest {
 		conferenceSingleResponse.setParticipantsFull(false);
 		conferenceSingleResponse.setLectures(new ArrayList<>());
 		conferenceSingleResponse.setFormat(Conference.Format.STATIONARY);
+		conferenceSingleResponse.setPhotos(new ArrayList<>());
+		conferenceSingleResponse.setComments(new ArrayList<>());
 
 		when(conferenceUtil.getById(any(Long.class))).thenReturn(conference);
 		when(userUtil.getCurrentUser()).thenReturn(user);

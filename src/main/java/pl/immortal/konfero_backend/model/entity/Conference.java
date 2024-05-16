@@ -44,10 +44,10 @@ public class Conference {
 	@Enumerated(EnumType.STRING)
 	private Format format = Format.STATIONARY;
 	@ManyToMany
-	private List<File> photos;
+	private List<File> photos = new ArrayList<>();
 	private boolean verified;
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conference")
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<>();
 	private boolean participantsFull;
 
 	public enum Format {
