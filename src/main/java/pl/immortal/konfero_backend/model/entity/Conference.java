@@ -53,4 +53,8 @@ public class Conference {
 	public enum Format {
 		STATIONARY, ONLINE
 	}
+
+	public enum SortFields {
+		startDateTime, location, canceled, format, participantsFull
+	}
 }
