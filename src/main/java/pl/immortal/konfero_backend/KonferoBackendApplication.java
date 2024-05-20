@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class})
-@OpenAPIDefinition(info = @Info(title = "Konfero backend app documentation", description = "Author: Marcin Bator"))
+@OpenAPIDefinition(info = @Info(title = "Konfero backend app documentation", description = "Authors: Marcin Bator, Paweł Buczek"))
 public class KonferoBackendApplication {
 
 	public static void main(String[] args) {
