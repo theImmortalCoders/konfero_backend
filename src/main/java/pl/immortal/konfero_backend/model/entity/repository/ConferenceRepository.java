@@ -24,7 +24,7 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			"AND (?8 IS NULL OR EXISTS (" +
 			"   SELECT 1 FROM c.tags t WHERE t.id IN ?8))" +
 			"AND (?9 IS NULL OR c.organizer.id = ?9)" +
-			"AND (?10 IS NULL OR LOWER(cast(c.location as string)) LIKE LOWER(CONCAT('%', ?10, '%')))")
+			"AND (cast(?10 as string) IS NULL OR cast(c.location as string) LIKE CONCAT('%', ?10, '%'))")
 	Page<Conference> findAllWithFilters(
 			@Param("name") String name,
 			@Param("canceled") Boolean canceled,
