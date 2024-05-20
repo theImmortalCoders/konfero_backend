@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 	@Query(value = "SELECT c FROM Conference c " +
-			"WHERE (?1 IS NULL OR c.name = ?1) " +
+			"WHERE (?1 IS NULL OR lower(c.name) LIKE concat('%', lower(?1), '%')) " +
 			"AND (?2 IS NULL OR c.canceled = ?2) " +
 			"AND (?3 IS NULL OR c.participantsLimit = ?3) " +
 			"AND (?4 IS NULL OR c.verified = ?4) " +
