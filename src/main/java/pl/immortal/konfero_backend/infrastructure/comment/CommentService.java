@@ -47,6 +47,7 @@ public class CommentService {
 		response.setAuthor(author);
 		response.setContent(content.getValue());
 		response.setCreatedAt(LocalDateTime.now());
+		response.setRespondTo(comment);
 		commentRepository.save(response);
 
 		comment.getResponses().add(response);
@@ -64,6 +65,12 @@ public class CommentService {
 			Conference conference = conferenceUtil.getById(comment.getConference().getId());
 			conference.getComments().remove(comment);
 			conferenceUtil.save(conference);
+		}
+
+		if(comment.getRespondTo() != null){
+			Comment responded = findById(comment.getRespondTo().getId());
+			responded.getResponses().remove(comment);
+			commentRepository.save(responded);
 		}
 
 		commentRepository.delete(comment);
