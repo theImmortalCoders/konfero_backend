@@ -43,7 +43,7 @@ public class OidcAuthService extends OidcUserService {
 
 	private User createUser(Map<String, Object> attributes) {
 		return Option.ofOptional(userRepository
-						.getByEmailOrUsername((String) attributes.get("email"), (String) attributes.get("name")))
+						.findByEmail((String) attributes.get("email")))
 				.map(usr -> {
 					usr.setGoogleId((String) attributes.get("sub"));
 					return usr;
