@@ -53,6 +53,7 @@ public class ConferenceGetUseCase {
 				searchFields.getStartDateTimeFrom(),
 				searchFields.getStartDateTimeTo(),
 				searchFields.getTagsIds(),
+				searchFields.getTagsIds() != null ? searchFields.getTagsIds().size() : 0,
 				searchFields.getOrganizerId(),
 				searchFields.getLocationName(),
 				pageRequest

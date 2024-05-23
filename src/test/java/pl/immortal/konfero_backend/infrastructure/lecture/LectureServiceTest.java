@@ -154,6 +154,7 @@ public class LectureServiceTest {
 		response.setMaterials(new ArrayList<>());
 		response.setInterested(new ArrayList<>());
 		response.setConferenceId(1L);
+		response.setFormat(Conference.Format.STATIONARY);
 
 		assertEquals(response, lectureService.getById(1L));
 	}

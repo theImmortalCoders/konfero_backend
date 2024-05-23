@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 	@Query(value = "SELECT c FROM Conference c " +
-			"WHERE (?1 IS NULL OR c.name = ?1) " +
+			"WHERE (?1 IS NULL OR lower(c.name) LIKE concat('%', lower(cast(?1 as string)), '%')) " +
 			"AND (?2 IS NULL OR c.canceled = ?2) " +
 			"AND (?3 IS NULL OR c.participantsLimit = ?3) " +
 			"AND (?4 IS NULL OR c.verified = ?4) " +
@@ -22,9 +22,13 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			"AND (cast (?6 as localdatetime ) IS NULL OR c.startDateTime >= ?6) " +
 			"AND (cast (?7 as localdatetime) IS NULL OR c.endDateTime <= ?7) " +
 			"AND (?8 IS NULL OR EXISTS (" +
-			"   SELECT 1 FROM c.tags t WHERE t.id IN ?8))" +
-			"AND (?9 IS NULL OR c.organizer.id = ?9)" +
-			"AND (?10 IS NULL OR cast(c.location as string) like %?10%)")
+			"    SELECT 1" +
+			"    FROM c.tags t" +
+			"    WHERE t.id IN ?8" +
+			"    GROUP BY c.id" +
+			"    HAVING COUNT(DISTINCT t.id) = ?9))" +
+			"AND (?10 IS NULL OR c.organizer.id = ?10)" +
+			"AND (?11 IS NULL OR lower(cast(c.location as string)) LIKE CONCAT('%', lower(cast(?11 as string)), '%'))")
 	Page<Conference> findAllWithFilters(
 			@Param("name") String name,
 			@Param("canceled") Boolean canceled,
@@ -34,6 +38,7 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			@Param("startDateTimeFrom") LocalDateTime startDateTimeFrom,
 			@Param("startDateTimeTo") LocalDateTime startDateTimeTo,
 			@Param("tags") List<Long> tagsIds,
+			@Param("tagsAmount") int tagsAmount,
 			@Param("organizerId") Long organizerId,
 			@Param("locationName") String locationName,
 			Pageable pageable
