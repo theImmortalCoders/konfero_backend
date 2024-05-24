@@ -67,7 +67,7 @@ public class CommentService {
 			conferenceUtil.save(conference);
 		}
 
-		if(comment.getRespondTo() != null){
+		if (comment.getRespondTo() != null) {
 			Comment responded = findById(comment.getRespondTo().getId());
 			responded.getResponses().remove(comment);
 			commentRepository.save(responded);

@@ -13,6 +13,7 @@ import pl.immortal.konfero_backend.infrastructure.auth.dto.request.OrganizerSing
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.OrganizerRequestSingleResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserShortResponse;
 import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserSingleResponse;
+import pl.immortal.konfero_backend.infrastructure.auth.dto.response.UserStatsResponse;
 import pl.immortal.konfero_backend.model.Role;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 public class UserController {
 	private final UserService userService;
 	private final OrganizerRequestService organizerRequestService;
+	private final StatsUtil statsUtil;
 
 	@GetMapping("/me")
 	@Operation(summary = "Get info about current user (Auth)")
@@ -110,5 +112,12 @@ public class UserController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<List<OrganizerRequestSingleResponse>> getAllPendingRequests() {
 		return ResponseEntity.ok(organizerRequestService.getAllPendingRequests());
+	}
+
+	@GetMapping("/stats")
+	@Operation(summary = "Get users stats")
+	@ApiResponse(responseCode = "200", description = "Successfully retrieved")
+	public ResponseEntity<UserStatsResponse> getStats() {
+		return ResponseEntity.ok(statsUtil.getStats());
 	}
 }

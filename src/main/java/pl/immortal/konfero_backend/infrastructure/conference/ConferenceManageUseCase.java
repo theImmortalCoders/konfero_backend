@@ -40,7 +40,7 @@ public class ConferenceManageUseCase {
 
 		Option.of(request)
 				.map(conferenceMapper::map)
-				.peek(c -> updateConferenceData(request, c, tags))
+				.peek(c -> updateConferenceData(request, c, tags, true))
 				.peek(conferenceUtil::save);
 	}
 
@@ -55,7 +55,7 @@ public class ConferenceManageUseCase {
 
 		Option.of(conference)
 				.peek(c -> conferenceMapper.update(c, request))
-				.peek(c -> updateConferenceData(request, c, tags))
+				.peek(c -> updateConferenceData(request, c, tags, false))
 				.peek(conferenceUtil::save);
 	}
 
@@ -91,12 +91,14 @@ public class ConferenceManageUseCase {
 
 	//
 
-	private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags) {
+	private void updateConferenceData(ConferenceSingleRequest request, Conference c, List<Tag> tags, boolean setNewOrganizer) {
 		if (request.getLogoId() != null) {
 			c.setLogo(fileUtil.getImageById(request.getLogoId()));
 		}
+		if (setNewOrganizer) {
+			c.setOrganizer(userUtil.getCurrentUser());
+		}
 		c.setTags(new ArrayList<>(tags));
-		c.setOrganizer(userUtil.getCurrentUser());
 		c.setPhotos(new ArrayList<>(fileUtil.getImagesByIds(request.getPhotosIds())));
 		conferenceUtil.updateConferenceEndTimeByLectures(c);
 		conferenceUtil.updateFullStatus(c);
