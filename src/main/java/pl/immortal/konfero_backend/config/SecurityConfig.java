@@ -65,13 +65,7 @@ public class SecurityConfig {
 						.authorizationEndpoint(endpoint -> endpoint.baseUri(applicationProps.getLoginUri()))
 						.successHandler((request, response, authentication) -> {
 							RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-							String redirectUrl = Arrays.stream(request.getCookies())
-									.filter(cookie -> cookie.getName().equals("redirectUrl"))
-									.findFirst()
-									.map(Cookie::getValue)
-									.orElse(applicationProps.getRedirectUri());
-							redirectStrategy.sendRedirect(request, response, redirectUrl);
-							System.out.println(redirectUrl);
+							redirectStrategy.sendRedirect(request, response, applicationProps.getRedirectUri());
 						})
 				)
 				.logout(logout -> logout
