@@ -14,7 +14,7 @@ spring:
       client:
         registration:
           google:
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: http://kni.prz.edu.pl:47473/login/oauth2/code/google
             client-id: 613981732432-ru776ugru9amm581881k2pef05ugjv5q.apps.googleusercontent.com
             client-secret: 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
   jpa:
@@ -23,7 +23,7 @@ spring:
 konfero:
   security:
     allowed-origins:
-      - http://localhost:8080
-      - http://localhost:3000
-    redirect-uri: http://localhost:8080/api/docs.html
-    logout-redirect-uri: http://localhost:3000
+      - http://kni.prz.edu.pl:47474
+      - http://kni.prz.edu.pl:47473
+    redirect-uri: http://kni.prz.edu.pl:47474
+    logout-redirect-uri: http://kni.prz.edu.pl:47474
