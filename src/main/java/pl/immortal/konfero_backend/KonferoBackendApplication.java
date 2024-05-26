@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.util.TimeZone;
+
 @EnableAsync
 @SpringBootApplication(
 		exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class}
@@ -16,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class KonferoBackendApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
 		SpringApplication.run(KonferoBackendApplication.class, args);
 	}
 
