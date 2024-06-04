@@ -10,8 +10,8 @@ The application is intended to improve communication between organizers and part
 ## Key Features
 
 - OAuth2 Google authentication
-- Mailing system
-- Asynchronous notifications management with Rabbit and websocket
+- Mailing system with Thymeleaf
+- REST API for conferences, lectures, comments and user management
 
 ## Technologies Used
 Java 17, Spring Boot 3, PostgreSQL, Docker, RabbitMQ
