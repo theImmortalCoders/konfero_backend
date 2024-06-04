@@ -1,5 +1,5 @@
 
-# Platform for organizing conferences
+# Konfero - Platform for organizing conferences (Web API)
 
 ## Description
 
