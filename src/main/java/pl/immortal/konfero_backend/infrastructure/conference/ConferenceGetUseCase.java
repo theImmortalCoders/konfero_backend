@@ -37,7 +37,7 @@ public class ConferenceGetUseCase {
 			return response;
 		}
 
-		Conference conference = conferenceUtil.getByIdWithAuthorLecturerOrParticipantCheck(user, conferenceId);
+		Conference conference = conferenceUtil.getById(conferenceId);
 		var response = conferenceMapper.map(conference);
 		setConferenceResponseStats(response, conference, user);
 		return response;

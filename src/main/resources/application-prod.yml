@@ -1,32 +1,24 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5437/data
+    username: user
+    password: password
     driver-class-name: org.postgresql.Driver
   security:
     oauth2:
       client:
         registration:
           google:
-            redirect-uri: ${BACKEND_DOMAIN}/login/oauth2/code/google
+            redirect-uri: http://kni.prz.edu.pl:47473/login/oauth2/code/google
             client-id: 613981732432-ru776ugru9amm581881k2pef05ugjv5q.apps.googleusercontent.com
             client-secret: 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
   jpa:
     hibernate:
       ddl-auto: update
-server:
-  servlet:
-    session:
-      cookie:
-        domain: ${COOKIE_DOMAIN}
 konfero:
   security:
-    allowed-origins: ${ALLOWED_ORIGINS}
-    redirect-uri: ${FRONTEND_DOMAIN}
-    logout-redirect-uri: ${FRONTEND_DOMAIN}
-springdoc:
-  swagger-ui:
-    enabled: false
-  api-docs:
-    enabled: false
+    allowed-origins:
+      - http://kni.prz.edu.pl:47474
+      - http://kni.prz.edu.pl:47473
+    redirect-uri: http://kni.prz.edu.pl:47474
+    logout-redirect-uri: http://kni.prz.edu.pl:47474

@@ -25,5 +25,5 @@ konfero:
     allowed-origins:
       - http://localhost:8080
       - http://localhost:3000
-    redirect-uri: http://localhost:8080/api/docs.html
-    logout-redirect-uri: http://localhost:3000
+    redirect-uri: http://localhost:8080
+    logout-redirect-uri: http://localhost:8080
