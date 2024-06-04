@@ -21,9 +21,10 @@ The application is intended to improve communication between organizers and part
 
 - Materials presentation and publication
 - Managing session schedules
+- Asynchronous notifications management with Rabbit
 - An application supporting organizers of scientific conferences in planning
 
 ## Technologies Used
 
 - Frontend: React/Next.js (TypeScript), TailwindCSS
-- Backend: Java, Spring Boot, PostgreSQL, Docker
+- Backend: Java, Spring Boot, PostgreSQL, Docker, RabbitMQ
