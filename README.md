@@ -9,13 +9,13 @@ The application is intended to improve communication between organizers and part
 
 ## Team Members
 
-- **Marcin Bator** (@marcinbator) 
-- **Igor Litwa** (@miszor03)
-- **Wiktor Mazur** (@ZegarekPL)
-- **Paweł Buczek** (@pablitoo1)
-- **Bartłomiej Krówka** (@bkrowka)
-- **Adrian Gola** (@Adrianxx11)
-- **Bogdan Bosak** (@Bombkerman)
+- **Marcin Bator** (@marcinbator) BE
+- **Igor Litwa** (@miszor03) PM
+- **Wiktor Mazur** (@ZegarekPL) FE
+- **Paweł Buczek** (@pablitoo1) FE
+- **Bartłomiej Krówka** (@bkrowka) FE
+- **Adrian Gola** (@Adrianxx11) TS
+- **Bogdan Bosak** (@Bombkerman) FE
 
 ## Features
 
