@@ -17,6 +17,7 @@ public class ConferenceSearchFields {
 	private Integer participantsLimit;
 	private Boolean verified;
 	private Boolean participantsFull;
+	private Boolean showFinished;
 	private Long organizerId;
 	private String locationName;
 }

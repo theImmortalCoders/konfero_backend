@@ -48,6 +48,8 @@ public class ConferenceAttendUseCase {
 
 		if (!conference.getParticipants().contains(user))
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You haven't been signed up");
+		if (conference.isCanceled() || conference.getEndDateTime().isBefore(LocalDateTime.now()))
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Conference cancelled or ended");
 
 		conference.getParticipants().remove(user);
 		conferenceUtil.updateFullStatus(conference);

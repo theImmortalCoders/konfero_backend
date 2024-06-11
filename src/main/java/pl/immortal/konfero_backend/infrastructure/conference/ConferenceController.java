@@ -122,6 +122,7 @@ public class ConferenceController {
 			@RequestParam(required = false) Integer participantsLimit,
 			@RequestParam(required = false) Boolean verified,
 			@RequestParam(required = false) Boolean participantsFull,
+			@RequestParam(required = false) Boolean showFinished,
 			@RequestParam(required = false) Long organizerId,
 			@RequestParam(required = false) String locationName
 	) {
@@ -135,6 +136,7 @@ public class ConferenceController {
 				participantsLimit,
 				verified,
 				participantsFull,
+				showFinished,
 				organizerId,
 				locationName
 		);
