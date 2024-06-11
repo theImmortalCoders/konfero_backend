@@ -56,6 +56,7 @@ public class ConferenceGetUseCase {
 				searchFields.getTagsIds() != null ? searchFields.getTagsIds().size() : 0,
 				searchFields.getOrganizerId(),
 				searchFields.getLocationName(),
+				searchFields.getFinishedOnly(),
 				pageRequest
 		);
 

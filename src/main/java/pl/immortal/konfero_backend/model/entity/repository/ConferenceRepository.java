@@ -28,7 +28,8 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			"    GROUP BY c.id" +
 			"    HAVING COUNT(DISTINCT t.id) = ?9))" +
 			"AND (?10 IS NULL OR c.organizer.id = ?10)" +
-			"AND (?11 IS NULL OR lower(cast(c.location as string)) LIKE CONCAT('%', lower(cast(?11 as string)), '%'))")
+			"AND (?11 IS NULL OR lower(cast(c.location as string)) LIKE CONCAT('%', lower(cast(?11 as string)), '%'))" +
+			"AND (?12 IS NULL OR cast(c.endDateTime as localdatetime) < CURRENT_TIMESTAMP )")
 	Page<Conference> findAllWithFilters(
 			@Param("name") String name,
 			@Param("canceled") Boolean canceled,
@@ -41,6 +42,7 @@ public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 			@Param("tagsAmount") int tagsAmount,
 			@Param("organizerId") Long organizerId,
 			@Param("locationName") String locationName,
+			@Param("locationName") Boolean showFinished,
 			Pageable pageable
 	);
 
